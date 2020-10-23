@@ -47,6 +47,24 @@ public class Character
         return inventory;
     }
     
+    public String listItems()
+    {
+        String itemString = "The items in your inventory are:\n";
+        if(inventory != null)
+        {
+            for(Item item : inventory)
+            {
+                itemString += item.getName() + ": " + item.getDescription() + 
+                    ", it weighs " + item.getWeight() + " lbs.\n";
+            }
+            return itemString;
+        }
+        else
+        {
+            return "You don't have anything.";
+        }
+    }
+    
     public void takeItem(Item item)
     {
         inventory.add(item);

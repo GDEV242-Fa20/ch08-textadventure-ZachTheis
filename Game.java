@@ -244,6 +244,10 @@ public class Game
             case DROP:
                 putDownItem(command);
                 break;
+                
+            case INVENTORY:
+                getInventory(command);
+                break;
 
             case QUIT:
                 wantToQuit = quit(command);
@@ -322,17 +326,20 @@ public class Game
         
         String itemName = command.getSecondWord();
         ArrayList<Item> roomInventory = player.getLocation().getItems();
-        if(!roomInventory.contains(itemName))
+        boolean found = false;
+        
+        if(!player.getLocation().listItems().contains(itemName))
         {
-            System.out.println("That item isn't in the room!");
+            System.out.println("That isn't in the room!");
         }
         else
         {
             for(Item roomItem : roomInventory)
-            {
+            {   
                 if(roomItem.getName().equals(itemName))
                 {
                     player.takeItem(roomItem);
+                    found = true;
                     System.out.println("You took the " + itemName);
                 }
             }
@@ -355,21 +362,28 @@ public class Game
         
         String itemName = command.getSecondWord();
         ArrayList<Item> playerInventory = player.getInventory();
-        if(!playerInventory.contains(itemName))
+        boolean found = false;
+        for(Item playerItem : playerInventory)
         {
-            System.out.println("You don't have that!");
+            if(playerItem.getName().equals(itemName))
+            {
+                player.dropItem(playerItem);
+                found = true;
+            }
+        }
+        if(found)
+        {
+            System.out.println("You dropped the " + itemName);
         }
         else
         {
-            for(Item playerItem : playerInventory)
-            {
-                if(playerItem.getName().equals(itemName))
-                {
-                    player.dropItem(playerItem);
-                    System.out.println("You dropped the " + itemName);
-                }
-            }
+            System.out.println("You don't have that!");
         }
+    }
+    
+    private void getInventory(Command command)
+    {
+        System.out.println(player.listItems());
     }
 
     /** 

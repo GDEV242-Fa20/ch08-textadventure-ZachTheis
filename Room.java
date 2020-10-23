@@ -71,12 +71,13 @@ public class Room
     /**
      * Return a description of the room in the form:
      *     You are in the kitchen.
+     *     The items in this room are: knife
      *     Exits: north west
      * @return A long description of this room
      */
     public String getLongDescription()
     {
-        return "You are " + description + ".\n" +listItems() + ".\n" + 
+        return "You are " + description + ".\n" + listItems() + ".\n" + 
             getExitString();
     }
 
@@ -123,11 +124,27 @@ public class Room
     public String listItems()
     {
         String returnString = "The items in this room are:";
-        for(Item item : items)
+        boolean empty = true;
+        if(items != null)
         {
-            returnString += " " + item.getName();
+            for(Item item : items)
+            {
+                returnString += " " + item.getName();
+                empty = false;
+            }
         }
-        return returnString;
+        else
+        {
+            returnString = "There are no items here.";
+        }
+        if(empty)
+        {
+            return "There are no items here";
+        }
+        else
+        {
+            return returnString;
+        }
     }
     
     public void addItem(String name, String description, int weight)
