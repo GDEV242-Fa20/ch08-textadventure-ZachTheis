@@ -40,22 +40,23 @@ public class Game
     private void createRooms()
     {
         //Declare all rooms
-        Room outside, courtyard, trainingYard, barracks, grandHall, garden, 
+        Room outside, courtyard, trainingYard, gateHouse, barracks, grandHall, garden, 
         chapel, diningHall, kitchen, parlor, audienceChamber, throneRoom, 
         treasury, bedchamber, tower, dungeon;
         
         //Declare all items
         Item sword, shield, knife, steak, potion, rose, wine, cross, amulet, 
-        treasure, feather;
+        treasure, feather, key;
                     
         // create each room, adding exits to each
         outside = new Room("outside", "outside the castle gate");
         courtyard = new Room("courtyard", "in the courtyard");
         trainingYard = new Room("training yard", "in the training yard");
-        barracks = new Room("barracks", "in the barracks");
-        grandHall = new Room("grand hall", "in the grand hall");
+        gateHouse = new Room("gate house", "in the gate house");
+        barracks = new Room(true, "barracks", "in the barracks");
+        grandHall = new Room(true, "grand hall", "in the grand hall");
         garden = new Room("garden", "in the gardens");
-        chapel = new Room("chapel", "in the chapel");
+        chapel = new Room("chapel", "in the chapel", true);
         diningHall = new Room("dining hall", "in the dining hall");
         kitchen = new Room("kitchen", "in the kitchen");
         parlor = new Room("parlor", "in the parlor");
@@ -74,10 +75,13 @@ public class Game
         courtyard.setExit("south", outside);
         
         trainingYard.setExit("east", barracks);
+        trainingYard.setExit("south", gateHouse);
         trainingYard.setExit("west", courtyard);
         
         barracks.setExit("west", trainingYard);
         barracks.setExit("dungeon", dungeon);
+        
+        gateHouse.setExit("north", trainingYard);
 
         grandHall.setExit("north", garden);
         grandHall.setExit("east", diningHall);
@@ -122,10 +126,13 @@ public class Game
         amulet = new Item("amulet", "a magical amulet, set with a gem", 2);
         treasure = new Item("treasure", "the friends you made along the way", 15);
         feather = new Item("feather", "a magical feather", 4);
+        key = new Item("key", "a one-use key", 1);
             
         //add items to rooms
         barracks.addItem(sword);
         barracks.addItem(shield);
+        
+        gateHouse.addItem(key);
         
         kitchen.addItem(knife);
         
@@ -295,12 +302,35 @@ public class Game
 
         // Try to leave current room.
         Room nextRoom = player.getLocation().getExit(direction);
-
+        ArrayList<Item> playerInventory = player.getInventory();
+        boolean hasKey = false;
+        Item playerKey = null;
+        int index = 0;
         if (nextRoom == null) {
             System.out.println("You can't go that way!");
         }
+        else if(nextRoom.isLocked())
+        {
+            while(!hasKey)
+            {
+                if(playerInventory.get(index) != null);
+                {
+                    playerKey = key;
+                    hasKey = true;
+                }
+            }
+            if(playerInventory.contains(key))
+            {
+                playerInventory.remove(key);
+                player.setRoom(nextRoom);
+                System.out.println(player.getLocation().getLongDescription());
+            }
+            else
+            {
+                System.out.println("The door is locked!");
+            }
+        }
         else {
-            player.setRoom(nextRoom);
             if(nextRoom.isTrapped() && !player.listItems().contains("feather"))
             {   
                 nextRoom = player.getLocation().getExit("dungeon");

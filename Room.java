@@ -24,6 +24,7 @@ public class Room
     private HashMap<String, Room> exits; // stores exits of this room.
     private ArrayList<Item> items; //stores the items in this room.
     private boolean trapped; //indicates if this room has a trap door.
+    private boolean locked;
 
     /**
      * Create a room described "description". Initially, it has
@@ -45,6 +46,16 @@ public class Room
         this.name = name;
         this.description = description;
         this.trapped = trapped;
+        exits = new HashMap<>();
+        items = new ArrayList<>();
+    }
+    
+    public Room(boolean locked, String name, String description) 
+    {
+        this.name = name;
+        this.description = description;
+        trapped = false;
+        this.locked = locked;
         exits = new HashMap<>();
         items = new ArrayList<>();
     }
@@ -118,6 +129,11 @@ public class Room
     public boolean isTrapped()
     {
         return trapped;
+    }
+    
+    public boolean isLocked()
+    {
+        return locked;
     }
     
     /**
