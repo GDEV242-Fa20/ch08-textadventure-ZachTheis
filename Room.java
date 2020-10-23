@@ -37,6 +37,7 @@ public class Room
         this.description = description;
         trapped = false;
         exits = new HashMap<>();
+        items = new ArrayList<>();
     }
     
     public Room(String name, String description, boolean trapped) 
@@ -45,6 +46,7 @@ public class Room
         this.description = description;
         this.trapped = trapped;
         exits = new HashMap<>();
+        items = new ArrayList<>();
     }
 
     /**
@@ -74,7 +76,8 @@ public class Room
      */
     public String getLongDescription()
     {
-        return "You are " + description + ".\n" + getExitString();
+        return "You are " + description + ".\n" +listItems() + ".\n" + 
+            getExitString();
     }
 
     /**

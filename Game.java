@@ -29,19 +29,25 @@ public class Game
         parser = new Parser();
         player = new Character();
         createRooms();
-        createCharacters();
-        createItems();
+        //createCharacters();
+        //createItems();
     }
 
     /**
-     * Create all the rooms and link their exits together.
+     * Create all the rooms and link their exits together. Also create Items and 
+     * Characters and add them to the appropriate rooms
      */
     private void createRooms()
     {
+        //Declare all rooms
         Room outside, courtyard, trainingYard, barracks, grandHall, garden, 
         chapel, diningHall, kitchen, parlor, audienceChamber, throneRoom, 
         treasury, bedchamber, tower, dungeon;
-      
+        
+        //Declare all items
+        Item sword, shield, knife, steak, potion, rose, wine, cross, amulet, 
+        treasure, feather;
+                    
         // create each room, adding exits to each
         outside = new Room("outside", "outside the castle gate");
         courtyard = new Room("courtyard", "in the courtyard");
@@ -102,6 +108,37 @@ public class Game
         
         tower.setExit("east", audienceChamber);
         tower.setExit("down", dungeon);
+        
+        //initialize all items
+        sword = new Item("sword", "a gleaming steel sword", 5);
+        shield = new Item("shield", "a sturdy steel shield", 6);
+        knife = new Item("knife", "a sharp, heavy kitchen knife", 1);
+        steak = new Item("steak", "a juicy, rare steak", 2);
+        potion = new Item("potion", "a glowing red potion", 2);
+        rose = new Item("rose", "a beautiful red rose", 1);
+        wine = new Item("wine", "a bottle of dark wine", 3);
+        cross = new Item("cross", "a wooden cross", 5);
+        amulet = new Item("amulet", "a magical amulet, set with a gem", 2);
+        treasure = new Item("treasure", "the friends you made along the way", 15);
+        feather = new Item("feather", "a magical feather", 4);
+            
+        //add items to rooms
+        barracks.addItem(sword);
+        barracks.addItem(shield);
+        
+        kitchen.addItem(knife);
+        
+        diningHall.addItem(steak);
+        diningHall.addItem(potion);
+        
+        garden.addItem(rose);
+        
+        chapel.addItem(wine);
+        chapel.addItem(cross);
+        
+        tower.addItem(amulet);
+        
+        bedchamber.addItem(feather);
 
         player.setRoom(outside);  // start game outside
     }
@@ -111,12 +148,12 @@ public class Game
      */
     private void createCharacters()
     {
-        
+        //potentiall to be implemented
     }
     
     /**
      * Adds all items to the appropriate rooms and NPCs.
-     */
+     
     private void createItems()
     {
         Item sword, shield, knife, steak, potion, rose, wine, cross, amulet, 
@@ -139,7 +176,7 @@ public class Game
         //add items to rooms
         barracks.addItem(sword);
         
-    }
+    }*/
 
     /**
      *  Main play routine.  Loops until end of play.
@@ -198,6 +235,14 @@ public class Game
                 
             case LOOK:
                 lookAround(command);
+                break;
+                
+            case TAKE:
+                pickUpItem(command);
+                break;
+                
+            case DROP:
+                putDownItem(command);
                 break;
 
             case QUIT:
@@ -259,7 +304,7 @@ public class Game
      */
     private void lookAround(Command command)
     {
-        player.getLocation().getLongDescription();
+        System.out.println(player.getLocation().getLongDescription());
     }
 
     /**
