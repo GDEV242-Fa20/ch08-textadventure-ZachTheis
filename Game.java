@@ -139,6 +139,8 @@ public class Game
         tower.addItem(amulet);
         
         bedchamber.addItem(feather);
+        
+        treasury.addItem(treasure);
 
         player.setRoom(outside);  // start game outside
     }
@@ -234,7 +236,7 @@ public class Game
                 break;
                 
             case LOOK:
-                lookAround(command);
+                lookAround();
                 break;
                 
             case TAKE:
@@ -246,7 +248,11 @@ public class Game
                 break;
                 
             case INVENTORY:
-                getInventory(command);
+                getInventory();
+                break;
+                
+            case USE:
+                useItem(command, player.getLocation());
                 break;
 
             case QUIT:
@@ -306,7 +312,7 @@ public class Game
     /**
      * Looks around your current location to see all exits, NPCs, and items.
      */
-    private void lookAround(Command command)
+    private void lookAround()
     {
         System.out.println(player.getLocation().getLongDescription());
     }
@@ -326,7 +332,7 @@ public class Game
         
         String itemName = command.getSecondWord();
         ArrayList<Item> roomInventory = player.getLocation().getItems();
-        boolean found = false;
+        Item takenItem = null;
         
         if(!player.getLocation().listItems().contains(itemName))
         {
@@ -339,9 +345,13 @@ public class Game
                 if(roomItem.getName().equals(itemName))
                 {
                     player.takeItem(roomItem);
-                    found = true;
+                    takenItem = roomItem;
                     System.out.println("You took the " + itemName);
                 }
+            }
+            if(takenItem != null)
+            {
+                roomInventory.remove(takenItem);
             }
         }
     }
@@ -362,26 +372,59 @@ public class Game
         
         String itemName = command.getSecondWord();
         ArrayList<Item> playerInventory = player.getInventory();
-        boolean found = false;
-        for(Item playerItem : playerInventory)
-        {
-            if(playerItem.getName().equals(itemName))
-            {
-                player.dropItem(playerItem);
-                found = true;
-            }
-        }
-        if(found)
-        {
-            System.out.println("You dropped the " + itemName);
-        }
-        else
+        Item droppedItem = null;
+        if(!player.listItems().contains(itemName))
         {
             System.out.println("You don't have that!");
         }
+        else
+        {
+        for(Item playerItem : playerInventory)
+            {
+                if(playerItem.getName().equals(itemName))
+                {
+                    player.getLocation().addItem(playerItem);
+                    droppedItem = playerItem;
+                    System.out.println("You dropped the " + itemName);
+                }
+            }
+        }
+        if(droppedItem != null)
+        {
+            playerInventory.remove(droppedItem);
+        }
     }
     
-    private void getInventory(Command command)
+    private void useItem(Command command, Room currentRoom)
+    {
+        String itemName = command.getSecondWord();
+        ArrayList<Item> playerInventory = player.getInventory();
+        Item useItem = null;
+        if(!command.hasSecondWord())
+        {
+            System.out.println("Use what?");
+        }
+        else
+        {
+            for(Item item : playerInventory)
+            {
+                if(item.getName().equals(itemName))
+                {
+                    useItem = item;
+                }
+            }
+            if(useItem != null)
+            {
+                useItem.use(itemName, player.getLocation());
+            }
+            else
+            {
+                System.out.println("You don't have that!");
+            }
+        }
+    }
+    
+    private void getInventory()
     {
         System.out.println(player.listItems());
     }

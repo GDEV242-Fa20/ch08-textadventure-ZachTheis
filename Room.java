@@ -58,6 +58,11 @@ public class Room
     {
         exits.put(direction, neighbor);
     }
+    
+    public String getName()
+    {
+        return name;
+    }
 
     /**
      * @return The short description of the room

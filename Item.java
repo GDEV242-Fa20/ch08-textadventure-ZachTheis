@@ -49,4 +49,18 @@ public class Item
         return itemWeight;
     }
     
+    public void use(String item, Room currentRoom)
+    {
+        switch(item)
+        {
+            case "knife":
+                if(currentRoom.getName().equals("diningHall"))
+                {
+                    
+                }
+            default:
+                System.out.println("You don't have that!");
+                break;
+        }
+    }
 }

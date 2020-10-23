@@ -68,12 +68,10 @@ public class Character
     public void takeItem(Item item)
     {
         inventory.add(item);
-        currentRoom.removeItem(item);
     }
     
     public void dropItem(Item item)
     {
-        currentRoom.addItem(item);
         inventory.remove(item);
     }
 }
