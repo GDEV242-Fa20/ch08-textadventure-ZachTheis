@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 /**
  *  This class is the main class of the "World of Zuul" application. 
  *  "World of Zuul" is a very simple, text based adventure game.  Users 
@@ -18,15 +19,18 @@
 public class Game 
 {
     private Parser parser;
-    private Room currentRoom;
+    private Character player;
         
     /**
      * Create the game and initialise its internal map.
      */
     public Game() 
     {
-        createRooms();
         parser = new Parser();
+        player = new Character();
+        createRooms();
+        createCharacters();
+        createItems();
     }
 
     /**
@@ -34,30 +38,107 @@ public class Game
      */
     private void createRooms()
     {
-        Room outside, theater, pub, lab, office;
+        Room outside, courtyard, trainingYard, barracks, grandHall, garden, 
+        chapel, diningHall, kitchen, parlor, audienceChamber, throneRoom, 
+        treasury, bedchamber, tower, dungeon;
       
-        // create the rooms
-        outside = new Room("outside the main entrance of the university");
-        theater = new Room("in a lecture theater");
-        pub = new Room("in the campus pub");
-        lab = new Room("in a computing lab");
-        office = new Room("in the computing admin office");
+        // create each room, adding exits to each
+        outside = new Room("outside", "outside the castle gate");
+        courtyard = new Room("courtyard", "in the courtyard");
+        trainingYard = new Room("training yard", "in the training yard");
+        barracks = new Room("barracks", "in the barracks");
+        grandHall = new Room("grand hall", "in the grand hall");
+        garden = new Room("garden", "in the gardens");
+        chapel = new Room("chapel", "in the chapel");
+        diningHall = new Room("dining hall", "in the dining hall");
+        kitchen = new Room("kitchen", "in the kitchen");
+        parlor = new Room("parlor", "in the parlor");
+        audienceChamber = new Room("audience chamber", "in the audience chamber");
+        throneRoom = new Room("throne room", "in the throne room");
+        treasury = new Room("treasury", "in the treasury", true);
+        bedchamber = new Room("bedchamber", "in the royal bedchamber");
+        tower = new Room("tower", "in the wizard's tower");
+        dungeon = new Room("dungeon", "trapped in the dungeon");
         
         // initialise room exits
-        outside.setExit("east", theater);
-        outside.setExit("south", lab);
-        outside.setExit("west", pub);
+        outside.setExit("north", courtyard);
 
-        theater.setExit("west", outside);
+        courtyard.setExit("north", grandHall);
+        courtyard.setExit("east", trainingYard);
+        courtyard.setExit("south", outside);
+        
+        trainingYard.setExit("east", barracks);
+        trainingYard.setExit("west", courtyard);
+        
+        barracks.setExit("west", trainingYard);
 
-        pub.setExit("east", outside);
+        grandHall.setExit("north", garden);
+        grandHall.setExit("east", diningHall);
+        grandHall.setExit("south", courtyard);
+        grandHall.setExit("west", parlor);  
+        grandHall.setExit("up", audienceChamber);
 
-        lab.setExit("north", outside);
-        lab.setExit("east", office);
+        garden.setExit("north", chapel);
+        garden.setExit("south", grandHall);
 
-        office.setExit("west", lab);
+        diningHall.setExit("north", kitchen);
+        diningHall.setExit("west", grandHall);
+        
+        kitchen.setExit("south", diningHall);
+        
+        parlor.setExit("east", grandHall);
+        
+        audienceChamber.setExit("north", throneRoom);
+        audienceChamber.setExit("west", tower);
+        audienceChamber.setExit("down", grandHall);
+        
+        throneRoom.setExit("north", treasury);
+        throneRoom.setExit("east", bedchamber);
+        throneRoom.setExit("south", audienceChamber);
+        
+        treasury.setExit("south", throneRoom);
+        
+        bedchamber.setExit("west", throneRoom);
+        
+        tower.setExit("east", audienceChamber);
+        tower.setExit("down", dungeon);
 
-        currentRoom = outside;  // start game outside
+        player.setRoom(outside);  // start game outside
+    }
+    
+    /**
+     * Adds all NPCs to the appropriate rooms
+     */
+    private void createCharacters()
+    {
+        
+    }
+    
+    /**
+     * Adds all items to the appropriate rooms and NPCs.
+     */
+    private void createItems()
+    {
+        Item sword, shield, knife, steak, potion, rose, wine, cross, amulet, 
+        treasure, featherBoots;
+        
+        //initialize all items
+        sword = new Item("sword", "a gleaming steel sword", 5);
+        shield = new Item("shield", "a sturdy steel shield", 6);
+        knife = new Item("knife", "a sharp, heavy kitchen knife", 1);
+        steak = new Item("steak", "a juicy, rare steak", 2);
+        potion = new Item("potion", "a glowing red potion", 2);
+        rose = new Item("rose", "a beautiful red rose", 1);
+        wine = new Item("wine", "a bottle of dark wine", 3);
+        cross = new Item("cross", "a wooden cross", 5);
+        amulet = new Item("amulet", "a magical amulet, set with a gem", 2);
+        treasure = new Item("treasure", "the friends you made along the way", 15);
+        featherBoots = new Item("feather boots", "a pair of boots that make your" +
+            " steps as light as a feather.", 4);
+            
+        //add items to rooms
+        barracks.addItem(sword);
+        
     }
 
     /**
@@ -88,7 +169,7 @@ public class Game
         System.out.println("World of Zuul is a new, incredibly boring adventure game.");
         System.out.println("Type '" + CommandWord.HELP + "' if you need help.");
         System.out.println();
-        System.out.println(currentRoom.getLongDescription());
+        System.out.println(player.getLocation().getLongDescription());
     }
 
     /**
@@ -113,6 +194,10 @@ public class Game
 
             case GO:
                 goRoom(command);
+                break;
+                
+            case LOOK:
+                lookAround(command);
                 break;
 
             case QUIT:
@@ -153,14 +238,92 @@ public class Game
         String direction = command.getSecondWord();
 
         // Try to leave current room.
-        Room nextRoom = currentRoom.getExit(direction);
+        Room nextRoom = player.getLocation().getExit(direction);
 
         if (nextRoom == null) {
-            System.out.println("There is no door!");
+            System.out.println("You can't go that way!");
         }
+        //else if (nextRoom.isTrapped())
+        //{
+        //   player.setRoom(dungeon);
+        //    System.out.println("Oh no! You fell through a trap door!");
+        //}
         else {
-            currentRoom = nextRoom;
-            System.out.println(currentRoom.getLongDescription());
+            player.setRoom(nextRoom);
+            System.out.println(player.getLocation().getLongDescription());
+        }
+    }
+    
+    /**
+     * Looks around your current location to see all exits, NPCs, and items.
+     */
+    private void lookAround(Command command)
+    {
+        player.getLocation().getLongDescription();
+    }
+
+    /**
+     * Picks up an item from the current room and adds it to the player's inventory,
+     * printing an error message if the item isn't in the room.
+     * @param command The processed command containing the name of the item.
+     */
+    private void pickUpItem(Command command)
+    {
+        if(!command.hasSecondWord())
+        {
+            System.out.println("Take what?");
+            return;
+        }
+        
+        String itemName = command.getSecondWord();
+        ArrayList<Item> roomInventory = player.getLocation().getItems();
+        if(!roomInventory.contains(itemName))
+        {
+            System.out.println("That item isn't in the room!");
+        }
+        else
+        {
+            for(Item roomItem : roomInventory)
+            {
+                if(roomItem.getName().equals(itemName))
+                {
+                    player.takeItem(roomItem);
+                    System.out.println("You took the " + itemName);
+                }
+            }
+        }
+    }
+    
+    /**
+     * Puts down an item from the player's inventory, adding it to the room. If the
+     * player doesn't have the specified item, an error message indicates that.
+     * @param command The processed command containing the name of the item to be
+     * dropped.
+     */
+    private void putDownItem(Command command)
+    {
+        if(!command.hasSecondWord())
+        {
+            System.out.println("Take what?");
+            return;
+        }
+        
+        String itemName = command.getSecondWord();
+        ArrayList<Item> playerInventory = player.getInventory();
+        if(!playerInventory.contains(itemName))
+        {
+            System.out.println("You don't have that!");
+        }
+        else
+        {
+            for(Item playerItem : playerInventory)
+            {
+                if(playerItem.getName().equals(itemName))
+                {
+                    player.dropItem(playerItem);
+                    System.out.println("You dropped the " + itemName);
+                }
+            }
         }
     }
 

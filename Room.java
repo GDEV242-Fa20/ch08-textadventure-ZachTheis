@@ -19,9 +19,11 @@ import java.util.Iterator;
 
 public class Room 
 {
+    private String name;
     private String description;
     private HashMap<String, Room> exits; // stores exits of this room.
     private ArrayList<Item> items; //stores the items in this room.
+    private boolean trapped; //leads to the dungeon when you enter.
 
     /**
      * Create a room described "description". Initially, it has
@@ -29,9 +31,19 @@ public class Room
      * "an open court yard".
      * @param description The room's description.
      */
-    public Room(String description) 
+    public Room(String name, String description) 
     {
+        this.name = name;
         this.description = description;
+        trapped = false;
+        exits = new HashMap<>();
+    }
+    
+    public Room(String name, String description, boolean trapped) 
+    {
+        this.name = name;
+        this.description = description;
+        this.trapped = trapped;
         exits = new HashMap<>();
     }
 
@@ -89,6 +101,11 @@ public class Room
     public Room getExit(String direction) 
     {
         return exits.get(direction);
+    }
+    
+    public boolean isTrapped()
+    {
+        return trapped;
     }
     
     /**

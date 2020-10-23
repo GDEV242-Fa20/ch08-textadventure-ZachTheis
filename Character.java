@@ -5,7 +5,7 @@ import java.util.ArrayList;
  * @author (your name)
  * @version (a version number or a date)
  */
-public class Player
+public class Character
 {
     // instance variables - replace the example below with your own
     private ArrayList<Item> inventory;
@@ -15,13 +15,19 @@ public class Player
     /**
      * Constructor for objects of class Player
      */
-    public Player()
+    public Character()
     {
         // initialise instance variables
         inventory = new ArrayList<>();
         
     }
 
+    public Character(Item item, Room location)
+    {
+        currentRoom = location;
+        inventory.add(item);
+    }
+    
     /**
      * Sets the current location for the player
      * @param location The current location of the player
