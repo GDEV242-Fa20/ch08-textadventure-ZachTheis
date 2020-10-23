@@ -49,14 +49,17 @@ public class Item
         return itemWeight;
     }
     
-    public void use(String item, Room currentRoom)
+    public void use(String item, Character player, Room currentRoom)
     {
         switch(item)
         {
             case "knife":
                 if(currentRoom.getName().equals("diningHall"))
                 {
-                    
+                    System.out.println("You slice a thick cut of meat off of the" +
+                        " beast.");
+                    player.addItem(steak);
+                    player.removeItem(knife);
                 }
             default:
                 System.out.println("You don't have that!");

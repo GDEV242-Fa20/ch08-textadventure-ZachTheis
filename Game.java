@@ -252,7 +252,7 @@ public class Game
                 break;
                 
             case USE:
-                useItem(command, player.getLocation());
+                useItem(command, player, player.getLocation());
                 break;
 
             case QUIT:
@@ -395,7 +395,7 @@ public class Game
         }
     }
     
-    private void useItem(Command command, Room currentRoom)
+    private void useItem(Command command, Character player, Room currentRoom)
     {
         String itemName = command.getSecondWord();
         ArrayList<Item> playerInventory = player.getInventory();
@@ -415,7 +415,7 @@ public class Game
             }
             if(useItem != null)
             {
-                useItem.use(itemName, player.getLocation());
+                useItem.use(itemName, player, player.getLocation());
             }
             else
             {
