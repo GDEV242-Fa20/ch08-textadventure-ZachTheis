@@ -77,6 +77,7 @@ public class Game
         trainingYard.setExit("west", courtyard);
         
         barracks.setExit("west", trainingYard);
+        barracks.setExit("dungeon", dungeon);
 
         grandHall.setExit("north", garden);
         grandHall.setExit("east", diningHall);
@@ -103,11 +104,11 @@ public class Game
         throneRoom.setExit("south", audienceChamber);
         
         treasury.setExit("south", throneRoom);
+        treasury.setExit("dungeon", dungeon);
         
         bedchamber.setExit("west", throneRoom);
         
-        tower.setExit("east", audienceChamber);
-        tower.setExit("down", dungeon);
+        tower.setExit("east", audienceChamber);        
         
         //initialize all items
         sword = new Item("sword", "a gleaming steel sword", 5);
@@ -298,12 +299,13 @@ public class Game
         if (nextRoom == null) {
             System.out.println("You can't go that way!");
         }
-        //else if (nextRoom.isTrapped())
-        //{
-        //   player.setRoom(dungeon);
-        //    System.out.println("Oh no! You fell through a trap door!");
-        //}
         else {
+            player.setRoom(nextRoom);
+            if(nextRoom.isTrapped() && !player.listItems().contains("feather"))
+            {   
+                nextRoom = player.getLocation().getExit("dungeon");
+                System.out.println("Oh no! You fell down a trap door!");
+            }
             player.setRoom(nextRoom);
             System.out.println(player.getLocation().getLongDescription());
         }

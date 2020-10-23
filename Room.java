@@ -13,8 +13,8 @@ import java.util.Iterator;
  * connected to other rooms via exits.  For each existing exit, the room 
  * stores a reference to the neighboring room.
  * 
- * @author  Michael Kölling and David J. Barnes
- * @version 2016.02.29
+ * @author  Zach Theis
+ * @version 2020.10.25
  */
 
 public class Room 
@@ -23,7 +23,7 @@ public class Room
     private String description;
     private HashMap<String, Room> exits; // stores exits of this room.
     private ArrayList<Item> items; //stores the items in this room.
-    private boolean trapped; //leads to the dungeon when you enter.
+    private boolean trapped; //indicates if this room has a trap door.
 
     /**
      * Create a room described "description". Initially, it has
@@ -96,7 +96,10 @@ public class Room
         String returnString = "Exits:";
         Set<String> keys = exits.keySet();
         for(String exit : keys) {
-            returnString += " " + exit;
+            if(!exit.equals("dungeon"))
+            {
+                returnString += " " + exit;
+            }
         }
         return returnString;
     }
