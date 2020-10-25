@@ -45,7 +45,7 @@ public class Game
         treasury, bedchamber, tower, dungeon;
         
         //Declare all items
-        Item sword, shield, knife, steak, potion, rose, wine, cross, amulet, 
+        Item sword, shield, knife, beast, potion, rose, wine, cross, amulet, 
         treasure, feather;
                     
         // create each room, adding exits to each
@@ -113,7 +113,7 @@ public class Game
         sword = new Item("sword", "a gleaming steel sword", 5);
         shield = new Item("shield", "a sturdy steel shield", 6);
         knife = new Item("knife", "a sharp, heavy kitchen knife", 1);
-        steak = new Item("steak", "a juicy, rare steak", 2);
+        beast = new Item("beast", "a gigantic roast beast of some kind", 100);
         potion = new Item("potion", "a glowing red potion", 2);
         rose = new Item("rose", "a beautiful red rose", 1);
         wine = new Item("wine", "a bottle of dark wine", 3);
@@ -128,7 +128,7 @@ public class Game
         
         kitchen.addItem(knife);
         
-        diningHall.addItem(steak);
+        diningHall.addItem(beast);
         diningHall.addItem(potion);
         
         garden.addItem(rose);

@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 /**
  * Write a description of class Item here.
  *
@@ -51,19 +52,43 @@ public class Item
     
     public void use(String item, Character player, Room currentRoom)
     {
-        switch(item)
+        ArrayList<Item> playerInventory = player.getInventory();
+        Item useItem = null;
+        
+        for(Item searchItem : playerInventory)
         {
-            case "knife":
-                if(currentRoom.getName().equals("diningHall"))
-                {
-                    System.out.println("You slice a thick cut of meat off of the" +
-                        " beast.");
-                    player.addItem(steak);
-                    player.removeItem(knife);
-                }
-            default:
-                System.out.println("You don't have that!");
-                break;
+            if(searchItem.getName().equals(item))
+            {
+                useItem = searchItem;
+            }
+        }
+        if(useItem != null)
+        {
+            switch(item)
+            {
+                case "knife":
+                    if(currentRoom.getName().equals("dining hall"))
+                    {
+                        Item steak = new Item("steak", "a think, juicy steak",
+                            2);
+                        System.out.println("You slice a thick cut of meat off of the" +
+                            " beast. The knife is now too dull to use.");
+                            player.takeItem(steak);
+                            player.dropItem(useItem);
+                    }
+                    else
+                    {
+                        System.out.println("You can't use that here!");
+                    }
+                    break;
+                default:
+                    System.out.println("You don't have that!");
+                    break;
+            }
+        }
+        else
+        {
+            System.out.println("You don't have that!");
         }
     }
 }
