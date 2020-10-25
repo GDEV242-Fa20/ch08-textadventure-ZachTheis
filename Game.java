@@ -45,8 +45,13 @@ public class Game
         treasury, bedchamber, tower, dungeon;
         
         //Declare all items
+<<<<<<< HEAD
         Item sword, shield, knife, steak, potion, rose, wine, cross, amulet, 
         treasure, feather, key;
+=======
+        Item sword, shield, knife, beast, potion, rose, wine, cross, amulet, 
+        treasure, feather;
+>>>>>>> Item-use
                     
         // create each room, adding exits to each
         outside = new Room("outside", "outside the castle gate");
@@ -118,7 +123,7 @@ public class Game
         sword = new Item("sword", "a gleaming steel sword", 5);
         shield = new Item("shield", "a sturdy steel shield", 6);
         knife = new Item("knife", "a sharp, heavy kitchen knife", 1);
-        steak = new Item("steak", "a juicy, rare steak", 2);
+        beast = new Item("beast", "a gigantic roast beast of some kind", 100);
         potion = new Item("potion", "a glowing red potion", 2);
         rose = new Item("rose", "a beautiful red rose", 1);
         wine = new Item("wine", "a bottle of dark wine", 3);
@@ -136,7 +141,7 @@ public class Game
         
         kitchen.addItem(knife);
         
-        diningHall.addItem(steak);
+        diningHall.addItem(beast);
         diningHall.addItem(potion);
         
         garden.addItem(rose);
@@ -225,7 +230,7 @@ public class Game
                 break;
                 
             case USE:
-                useItem(command, player.getLocation());
+                useItem(command, player, player.getLocation());
                 break;
 
             case QUIT:
@@ -392,7 +397,7 @@ public class Game
         }
     }
     
-    private void useItem(Command command, Room currentRoom)
+    private void useItem(Command command, Character player, Room currentRoom)
     {
         String itemName = command.getSecondWord();
         ArrayList<Item> playerInventory = player.getInventory();
@@ -412,7 +417,7 @@ public class Game
             }
             if(useItem != null)
             {
-                useItem.use(itemName, player.getLocation());
+                useItem.use(itemName, player, player.getLocation());
             }
             else
             {
