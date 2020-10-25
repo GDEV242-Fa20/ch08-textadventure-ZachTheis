@@ -28,7 +28,7 @@ public class Game
     {
         parser = new Parser();
         player = new Character();
-        createRooms();
+        createGameState();
         //createCharacters();
         //createItems();
     }
@@ -37,7 +37,7 @@ public class Game
      * Create all the rooms and link their exits together. Also create Items and 
      * Characters and add them to the appropriate rooms
      */
-    private void createRooms()
+    private void createGameState()
     {
         //Declare all rooms
         Room outside, courtyard, trainingYard, gateHouse, barracks, grandHall, garden, 
@@ -126,7 +126,7 @@ public class Game
         amulet = new Item("amulet", "a magical amulet, set with a gem", 2);
         treasure = new Item("treasure", "the friends you made along the way", 15);
         feather = new Item("feather", "a magical feather", 4);
-        key = new Item("key", "a one-use key", 1);
+        key = new Item("key", "a single-use key", 1);
             
         //add items to rooms
         barracks.addItem(sword);
@@ -152,41 +152,6 @@ public class Game
 
         player.setRoom(outside);  // start game outside
     }
-    
-    /**
-     * Adds all NPCs to the appropriate rooms
-     */
-    private void createCharacters()
-    {
-        //potentiall to be implemented
-    }
-    
-    /**
-     * Adds all items to the appropriate rooms and NPCs.
-     
-    private void createItems()
-    {
-        Item sword, shield, knife, steak, potion, rose, wine, cross, amulet, 
-        treasure, featherBoots;
-        
-        //initialize all items
-        sword = new Item("sword", "a gleaming steel sword", 5);
-        shield = new Item("shield", "a sturdy steel shield", 6);
-        knife = new Item("knife", "a sharp, heavy kitchen knife", 1);
-        steak = new Item("steak", "a juicy, rare steak", 2);
-        potion = new Item("potion", "a glowing red potion", 2);
-        rose = new Item("rose", "a beautiful red rose", 1);
-        wine = new Item("wine", "a bottle of dark wine", 3);
-        cross = new Item("cross", "a wooden cross", 5);
-        amulet = new Item("amulet", "a magical amulet, set with a gem", 2);
-        treasure = new Item("treasure", "the friends you made along the way", 15);
-        featherBoots = new Item("feather boots", "a pair of boots that make your" +
-            " steps as light as a feather.", 4);
-            
-        //add items to rooms
-        barracks.addItem(sword);
-        
-    }*/
 
     /**
      *  Main play routine.  Loops until end of play.
@@ -303,7 +268,6 @@ public class Game
         // Try to leave current room.
         Room nextRoom = player.getLocation().getExit(direction);
         ArrayList<Item> playerInventory = player.getInventory();
-        boolean hasKey = false;
         Item playerKey = null;
         int index = 0;
         if (nextRoom == null) {
@@ -311,18 +275,19 @@ public class Game
         }
         else if(nextRoom.isLocked())
         {
-            while(!hasKey)
+            for(Item searchItem : playerInventory)
             {
-                if(playerInventory.get(index) != null);
+                if(searchItem.getName().equals("key"))
                 {
-                    playerKey = key;
-                    hasKey = true;
+                    playerKey = searchItem;
                 }
             }
-            if(playerInventory.contains(key))
+            if(playerKey != null)
             {
-                playerInventory.remove(key);
+                player.dropItem(playerKey);
                 player.setRoom(nextRoom);
+                System.out.println("You used a key to unlock the door. I wonder" +
+                    " why it was a single-use key?");
                 System.out.println(player.getLocation().getLongDescription());
             }
             else
