@@ -452,7 +452,7 @@ public class Game
                     }
                 }
             }
-            if(takenItem.getName().equals("treasure"))
+            if(takenItem.getName().equals("key"))
             {  
                 System.out.println("You have done it!");
                 System.out.println("You have found the lost treasure!");
