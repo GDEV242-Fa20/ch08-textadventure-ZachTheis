@@ -10,7 +10,7 @@ public class Character
     // instance variables - replace the example below with your own
     private ArrayList<Item> inventory;
     private Room currentRoom;
-    private final int WEIGHTLIMIT = 50;
+    private int weightLimit = 15;
 
     /**
      * Constructor for objects of class Player
@@ -45,6 +45,21 @@ public class Character
     public ArrayList getInventory()
     {
         return inventory;
+    }
+    
+        public int getWeightLimit()
+    {
+        return weightLimit;
+    }
+    
+        public int getWeightCarried()
+    {
+        int total = 0;
+        for(Item item : inventory)
+        {
+            total += item.getWeight();
+        }
+        return total;
     }
     
     public String listItems()

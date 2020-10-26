@@ -341,9 +341,17 @@ public class Game
             {   
                 if(roomItem.getName().equals(itemName))
                 {
-                    player.takeItem(roomItem);
-                    takenItem = roomItem;
-                    System.out.println("You took the " + itemName);
+                    if(roomItem.getWeight() + player.getWeightCarried() > 
+                        player.getWeightLimit())
+                    {
+                        System.out.println("You can't carry that much weight!");
+                    }
+                    else 
+                    {
+                        player.takeItem(roomItem);
+                        takenItem = roomItem;
+                        System.out.println("You took the " + itemName);
+                    }
                 }
             }
             if(takenItem != null)
