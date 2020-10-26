@@ -81,7 +81,7 @@ public class Item
                         Item steak = new Item("steak", "a think, juicy steak",
                             2);
                         System.out.println("You slice a thick cut of meat off" +
-                            "of the beast.\nThe knife is now too dull to use.");
+                            " of the beast.\nThe knife is now too dull to use.");
                             player.takeItem(steak);
                             player.dropItem(useItem);
                     }
@@ -123,7 +123,7 @@ public class Item
                     break;
                 case "sword":
                     boolean hasShield = false;
-                    while(!hasShield || index < playerInventory.size())
+                    while(!hasShield && index < playerInventory.size())
                     {
                         if(playerInventory.get(index).getName().equals("shield"))
                         {
@@ -131,9 +131,10 @@ public class Item
                         }
                         index++;
                     }
-                    while(target == null || index < roomNPCs.size())
+                    while(target == null && index < roomNPCs.size())
                     {
-                        if(roomNPCs.get(index).getName().equals("ogre"))
+                        if(roomNPCs.get(index).getName().equals("ogre") &&
+                            roomNPCs.get(index).getLocation() == currentRoom)
                         {
                             target = roomNPCs.get(index);
                         }

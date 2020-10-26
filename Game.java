@@ -184,7 +184,7 @@ public class Game
             "than-shining armor", "Hello there, hero! How brave of you to... brave"
             + " these ruins!\nI am Sir Loin, sent here to recover the kings's lost" +
             " treasure.\nI'm just so hungry though. Do you think you could find" +
-            " me something to eat?\nAnd something to wash it down with", 
+            " me something to eat?\nOh, and something to wash it down with!", 
             "You know, the greatest pleasure in life is a juicy steak paired with" +
             " a good wine.");
         
@@ -587,7 +587,7 @@ public class Game
             }
         }
         System.out.println(talkString);
-        if(charName.equals("skeleton"))
+        if(charName != null && charName.equals("skeleton"))
         {
             player.harm();
             player.setRoom(player.getLocation().getExit("hidden"));
@@ -629,7 +629,7 @@ public class Game
         {
             for(Item item : playerInventory)
             {
-                if(item.getName().equals(tradeItem))
+                if(item.getName().equals(itemName))
                 {
                     tradeItem = item;
                 }
@@ -637,6 +637,8 @@ public class Game
             if(tradeItem != null)
             {
                 System.out.println(tradePartner.getTradeDialogue());
+                System.out.println("The " + tradePartner.getName() + " took your " +
+                    itemName + " and gave you a " + tradeItem.getName() + ".");
                 player.dropItem(tradeItem);
                 player.takeItem(tradePartner.getTrade(itemName));
                 tradePartner.setDialogue(tradePartner.getTradeDialogue());
