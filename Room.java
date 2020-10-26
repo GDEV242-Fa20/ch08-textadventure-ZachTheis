@@ -131,11 +131,19 @@ public class Room
         return exits.get(direction);
     }
     
+    /**
+     * Indicates whether the exit is trapped
+     * @return Method returns true if the room is trapped.
+     */
     public boolean isTrapped()
     {
         return trapped;
     }
     
+    /**
+     * Indicates whether the exit is locked
+     * @return Method returns true if the room is locked.
+     */
     public boolean isLocked()
     {
         return locked;
@@ -150,6 +158,11 @@ public class Room
         return items;
     }
     
+    /**
+     * Creates a list of all items in the room, including their descriptions and 
+     * weights
+     * @return The list of item details
+     */
     public String listItems()
     {
         String returnString = "The items in this room are:";
@@ -176,16 +189,31 @@ public class Room
         }
     }
     
+    /**
+     * Adds a new item to the room's inventory.
+     * @param item The existing item to be added to the inventory.
+     */
+    public void addItem(Item item)
+    {
+        items.add(item);
+    }
+        
+    /**
+     * An overloaded version of the previous method, in which all of the item's
+     * parameters are set in the method call.
+     * @param name The item's name
+     * @param description The item's description
+     * @param weight The item's weight
+     */
     public void addItem(String name, String description, int weight)
     {
         items.add(new Item(name, description, weight));
     }
     
-    public void addItem(Item item)
-    {
-        items.add(item);
-    }
-    
+    /**
+     * Removes an item from the room's inventory
+     * @param item The item to remove
+     */
     public void removeItem(Item item)
     {
         items.remove(item);

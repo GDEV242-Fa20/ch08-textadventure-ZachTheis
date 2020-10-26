@@ -1,9 +1,8 @@
 import java.util.ArrayList;
 /**
- *  This class is the main class of the "World of Zuul" application. 
- *  "World of Zuul" is a very simple, text based adventure game.  Users 
- *  can walk around some scenery. That's all. It should really be extended 
- *  to make it more interesting!
+ *  Disclaimer: I haven't done much in the way of documentation, yet. 
+ *  I've been trying to make functional code, knowing it will need refactoring
+ *  before attempting to do so.
  * 
  *  To play this game, create an instance of this class and call the "play"
  *  method.
@@ -34,8 +33,9 @@ public class Game
     }
 
     /**
+     * Creates the base game state
      * Create all the rooms and link their exits together. Also create Items and 
-     * Characters and add them to the appropriate rooms
+     * Characters and add them to the appropriate rooms.
      */
     private void createGameState()
     {
@@ -302,11 +302,11 @@ public class Game
                 break;
                 
             case INVENTORY:
-                getInventory();
+                printInventory();
                 break;
                 
             case USE:
-                useItem(command, player, player.getLocation(), nonPCs);
+                useItem(command);
                 break;
                 
             case TALK:
@@ -343,6 +343,8 @@ public class Game
     /** 
      * Try to go in one direction. If there is an exit, enter the new
      * room, otherwise print an error message.
+     * This will also test for locks and trapdoors.
+     * @param command The GO command passed from the parser.
      */
     private void goRoom(Command command) 
     {
@@ -421,7 +423,7 @@ public class Game
             return;
         }
         
-        String itemName = command.getSecondWord();
+        String itemName = command.getSecondWord(); 
         ArrayList<Item> roomInventory = player.getLocation().getItems();
         Item takenItem = null;
         
@@ -502,8 +504,13 @@ public class Game
         }
     }
     
-    private void useItem(Command command, Character player, Room currentRoom, 
-        ArrayList<Character> nonPlayerCharacters)
+    /**
+     * Checks your inventory to make sure you have the specified item.
+     * If so, uses it to various effects, as specified in the Item class.
+     * @param command The processed command containing the name of the item to
+     * be used
+     */
+    private void useItem(Command command)
     {
         String itemName = command.getSecondWord();
         ArrayList<Item> playerInventory = player.getInventory();
@@ -523,7 +530,8 @@ public class Game
             }
             if(useItem != null)
             {
-                useItem.use(itemName, player, player.getLocation(), nonPCs);
+                useItem.use(itemName, player, nonPCs);
+                
             }
             else
             {
@@ -532,11 +540,20 @@ public class Game
         }
     }
     
-    private void getInventory()
+    /**
+     * Prints a list of the names, descriptions, and weights of all items in the
+     * player's inventory.
+     */
+    private void printInventory()
     {
         System.out.println(player.listItems());
     }
-    
+
+    /**
+     * Talks to an NPC. If that NPC is not present, the method will create an
+     * error message.
+     * @param command The processed command with the name of the NPC to talk to.
+     */
     private void talkTo(Command command)
     {
         String talkString = "They aren't here";
@@ -559,6 +576,12 @@ public class Game
         System.out.println(talkString);
     }
     
+    /**
+     * Trades an item with an NPC that's present. If there are no NPCs, if the 
+     * player doesn't have the item, or if the NPC present doesn't want the item,
+     * the method will create a message saying so.
+     * @param command The processed command with the name of the item to be traded.
+     */
     public void tradeItem(Command command)
     {
         String itemName = command.getSecondWord();
@@ -617,6 +640,10 @@ public class Game
         }
     }
     
+    /**
+     * Prints the details of all NPCs present in the room. If there are none,
+     * the method will tell the player they are alone.
+     */
     private void printNPCDescription(Room room)
     {
         String nonPCDescription = "There is ";
@@ -629,7 +656,7 @@ public class Game
                 alone = false;
             }
         }
-        if(alone)
+        if(alone) 
         {
             System.out.println("You are alone here.");
         }

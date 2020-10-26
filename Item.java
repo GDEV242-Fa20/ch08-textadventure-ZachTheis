@@ -2,8 +2,8 @@ import java.util.ArrayList;
 /**
  * Write a description of class Item here.
  *
- * @author (your name)
- * @version (a version number or a date)
+ * @author Zach Theis
+ * @version 2020.10.25
  */
 public class Item
 {
@@ -50,13 +50,20 @@ public class Item
         return itemWeight;
     }
     
-    public void use(String item, Character player, Room currentRoom, 
-    ArrayList<Character> roomNPCs)
+    /**
+     * Uses an item in the player's inventory, to various effects contained in a 
+     * switch statement.
+     * @param item The name of the item to be used
+     * @param player The player character
+     * @param roomNPCs The arraylist of existing NPCs
+     */
+    public void use(String item, Character player, ArrayList<Character> roomNPCs)
     {
         ArrayList<Item> playerInventory = player.getInventory();
         Item useItem = null;
         Character target = null;
         int index = 0;
+        Room currentRoom = player.getLocation();
         for(Item searchItem : playerInventory)
         {
             if(searchItem.getName().equals(item))
