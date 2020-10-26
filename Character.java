@@ -11,6 +11,7 @@ public class Character
     private ArrayList<Item> inventory;
     private Room currentRoom;
     private int weightLimit = 15;
+    private String description;
 
     /**
      * Constructor for objects of class Player
@@ -21,9 +22,17 @@ public class Character
         inventory = new ArrayList<>();
         
     }
-
-    public Character(Item item, Room location)
+    
+    public Character(Room location, String description)
     {
+        inventory = new ArrayList();
+        currentRoom = location;
+        this.description = description;
+    }
+    
+    public Character(Room location, Item item)
+    {
+        inventory = new ArrayList();
         currentRoom = location;
         inventory.add(item);
     }
@@ -37,6 +46,7 @@ public class Character
         currentRoom = location;
     }
     
+    
     public Room getLocation()
     {
         return currentRoom;
@@ -47,12 +57,12 @@ public class Character
         return inventory;
     }
     
-        public int getWeightLimit()
-    {
+    public int getWeightLimit()
+    {   
         return weightLimit;
     }
     
-        public int getWeightCarried()
+    public int getWeightCarried()
     {
         int total = 0;
         for(Item item : inventory)

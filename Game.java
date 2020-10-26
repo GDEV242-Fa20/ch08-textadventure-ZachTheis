@@ -40,15 +40,11 @@ public class Game
     private void createGameState()
     {
         //Declare all rooms
-        Room outside, courtyard, trainingYard, gateHouse, barracks, grandHall, garden, 
-        chapel, diningHall, kitchen, parlor, audienceChamber, throneRoom, 
-        treasury, bedchamber, tower, dungeon;
-        
-        //Declare all items
-        Item sword, shield, knife, beast, potion, rose, wine, cross, amulet, 
-        treasure, feather, key;
+        Room outside, courtyard, trainingYard, gateHouse, barracks, grandHall, 
+        garden, chapel, diningHall, kitchen, parlor, audienceChamber, throneRoom, 
+        treasury, bedchamber, tower, dungeon, cellar, wineCellar, larder, cave;
                     
-        // create each room, adding exits to each
+        // initialize each room, adding exits to each
         outside = new Room("outside", "outside the castle gate");
         courtyard = new Room("courtyard", "in the courtyard");
         trainingYard = new Room("training yard", "in the training yard");
@@ -56,7 +52,7 @@ public class Game
         barracks = new Room(true, "barracks", "in the barracks");
         grandHall = new Room(true, "grand hall", "in the grand hall");
         garden = new Room("garden", "in the gardens");
-        chapel = new Room("chapel", "in the chapel", true);
+        chapel = new Room(true, "chapel", "in the chapel");
         diningHall = new Room("dining hall", "in the dining hall");
         kitchen = new Room("kitchen", "in the kitchen");
         parlor = new Room("parlor", "in the parlor");
@@ -66,8 +62,12 @@ public class Game
         bedchamber = new Room("bedchamber", "in the royal bedchamber");
         tower = new Room("tower", "in the wizard's tower");
         dungeon = new Room("dungeon", "trapped in the dungeon");
+        cellar = new Room("cellar", "in the cellar");
+        wineCellar = new Room("wine cellar", "in the wine cellar");
+        larder = new Room("larder", "in the larder");
+        cave = new Room("cave", "in a dank cave");
         
-        // initialise room exits
+        // set room exits
         outside.setExit("north", courtyard);
 
         courtyard.setExit("north", grandHall);
@@ -79,7 +79,6 @@ public class Game
         trainingYard.setExit("west", courtyard);
         
         barracks.setExit("west", trainingYard);
-        barracks.setExit("dungeon", dungeon);
         
         gateHouse.setExit("north", trainingYard);
 
@@ -88,6 +87,7 @@ public class Game
         grandHall.setExit("south", courtyard);
         grandHall.setExit("west", parlor);  
         grandHall.setExit("up", audienceChamber);
+        grandHall.setExit("down", cellar);
 
         garden.setExit("north", chapel);
         garden.setExit("south", grandHall);
@@ -108,11 +108,28 @@ public class Game
         throneRoom.setExit("south", audienceChamber);
         
         treasury.setExit("south", throneRoom);
-        treasury.setExit("dungeon", dungeon);
+        treasury.setExit("hidden", dungeon);
         
         bedchamber.setExit("west", throneRoom);
         
-        tower.setExit("east", audienceChamber);        
+        tower.setExit("east", audienceChamber);  
+        
+        cellar.setExit("up", grandHall);
+        cellar.setExit("east", wineCellar);
+        cellar.setExit("west", cave);
+        
+        wineCellar.setExit("north", larder);
+        wineCellar.setExit("west", cellar);
+        
+        larder.setExit("south", wineCellar);
+        
+        cave.setExit("east", cellar);
+        
+        dungeon.setExit("hidden", outside);
+        
+        //Declare all items
+        Item sword, shield, knife, beast, potion, rose, wine, stake, amulet, 
+        treasure, feather, key1, key2, key3, ashes;
         
         //initialize all items
         sword = new Item("sword", "a gleaming steel sword", 5);
@@ -122,17 +139,20 @@ public class Game
         potion = new Item("potion", "a glowing red potion", 2);
         rose = new Item("rose", "a beautiful red rose", 1);
         wine = new Item("wine", "a bottle of dark wine", 3);
-        cross = new Item("cross", "a wooden cross", 5);
+        stake = new Item("stake", "a wooden stake", 5);
         amulet = new Item("amulet", "a magical amulet, set with a gem", 2);
         treasure = new Item("treasure", "the friends you made along the way", 15);
         feather = new Item("feather", "a magical feather", 4);
-        key = new Item("key", "a single-use key", 1);
+        key1 = new Item("key", "a single-use key", 1);
+        key2 = new Item("key", "a single-use key", 1);
+        key3 = new Item("key", "a single-use key", 1);
             
         //add items to rooms
         barracks.addItem(sword);
         barracks.addItem(shield);
+        barracks.addItem(key2);
         
-        gateHouse.addItem(key);
+        gateHouse.addItem(key1);
         
         kitchen.addItem(knife);
         
@@ -142,13 +162,32 @@ public class Game
         garden.addItem(rose);
         
         chapel.addItem(wine);
-        chapel.addItem(cross);
+        chapel.addItem(stake);
         
         tower.addItem(amulet);
         
         bedchamber.addItem(feather);
         
         treasury.addItem(treasure);
+        
+        //Declare all characters
+        Character knight, skeleton, ogre, wizard, vampire, priest;
+        
+        //initialize all characters
+        knight = new Character(barracks, "a knight in somewhat less-than-" +
+            "shining armor");
+        skeleton = new Character(dungeon, "an animate - and very talkative - " +
+            "skeleton");
+        ogre = new Character(cave, "a smelly, brutish ogre.");
+        wizard = new Character(tower, "a robed, bearded wizard");
+        vampire = new Character(wineCellar, "a very stereotypical vampire");
+        priest = new Character(chapel, "a holy man, complete with mitre and" +
+            " rosary");
+            
+        
+        
+        //add character to rooms
+        
 
         player.setRoom(outside);  // start game outside
     }
@@ -298,7 +337,7 @@ public class Game
         else {
             if(nextRoom.isTrapped() && !player.listItems().contains("feather"))
             {   
-                nextRoom = player.getLocation().getExit("dungeon");
+                nextRoom = player.getLocation().getExit("hidden");
                 System.out.println("Oh no! You fell down a trap door!");
             }
             player.setRoom(nextRoom);

@@ -107,7 +107,7 @@ public class Room
         String returnString = "Exits:";
         Set<String> keys = exits.keySet();
         for(String exit : keys) {
-            if(!exit.equals("dungeon"))
+            if(!exit.equals("hidden"))
             {
                 returnString += " " + exit;
             }
