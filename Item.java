@@ -99,9 +99,10 @@ public class Item
                         "as you have it, trapdoors have no power over you!");
                     break;
                 case "stake":
-                    while(target == null || index < roomNPCs.size())
+                    while(target == null && index < roomNPCs.size())
                     {
-                        if(roomNPCs.get(index).getName().equals("vampire"))
+                        if(roomNPCs.get(index).getName().equals("vampire") &&
+                            roomNPCs.get(index).getLocation() == currentRoom)
                         {
                             target = roomNPCs.get(index);
                         }
@@ -115,6 +116,7 @@ public class Item
                         System.out.println("You stake the vampire in the heart."
                             + "\nHe turns into a pile of ash on the ground.");
                         player.dropItem(useItem);
+                        target.setRoom(currentRoom.getExit("dead"));
                     }
                     else
                     {
@@ -146,6 +148,9 @@ public class Item
                         + "\n...but it overpowers you with it's massive club!"
                         + "\nYou limp away, defeated.");
                         player.harm();
+                        Room nextRoom = currentRoom.getExit("east");
+                        player.setRoom(nextRoom);
+                        System.out.println(nextRoom.getLongDescription());
                     }
                     else if(target != null && hasShield)
                     {
@@ -156,6 +161,7 @@ public class Item
                             + "\n...and block his club with your shield!\n" +
                             "The ogre's head and body fall to the ground," +
                             " separately.");
+                        target.setRoom(currentRoom.getExit("dead"));
                     }
                     else
                     {

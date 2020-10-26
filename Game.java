@@ -221,7 +221,7 @@ public class Game
             " save for a bottle of blessed wine, but it is the\nlast one I " +
             "have. If the vampire in the wine cellar were to be slain,\nI would" +
             " gladly let you have this bottle.", "You've done it! You've slain" +
-            " the vampire who's been stealing my wine! Bless you, my child! " +
+            " the vampire who's been stealing my wine!\nBless you, my child! " +
             "Here, please take this wine in thanks!");
         
         //add characters to array
@@ -638,7 +638,8 @@ public class Game
             {
                 System.out.println(tradePartner.getTradeDialogue());
                 System.out.println("The " + tradePartner.getName() + " took your " +
-                    itemName + " and gave you a " + tradeItem.getName() + ".");
+                    itemName + " and gave you a " + 
+                    tradePartner.getTrade(itemName).getName() + ".");
                 player.dropItem(tradeItem);
                 player.takeItem(tradePartner.getTrade(itemName));
                 tradePartner.setDialogue(tradePartner.getTradeDialogue());
