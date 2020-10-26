@@ -12,6 +12,8 @@ public class Character
     private Room currentRoom;
     private int weightLimit = 15;
     private String description;
+    private String dialogue;
+    private int health = 3;
 
     /**
      * Constructor for objects of class Player
@@ -20,14 +22,14 @@ public class Character
     {
         // initialise instance variables
         inventory = new ArrayList<>();
-        
     }
     
-    public Character(Room location, String description)
+    public Character(Room location, String description, String dialogue)
     {
         inventory = new ArrayList();
         currentRoom = location;
         this.description = description;
+        this.dialogue = dialogue;
     }
     
     public Character(Room location, Item item)
@@ -36,16 +38,6 @@ public class Character
         currentRoom = location;
         inventory.add(item);
     }
-    
-    /**
-     * Sets the current location for the player
-     * @param location The current location of the player
-     */
-    public void setRoom(Room location)
-    {
-        currentRoom = location;
-    }
-    
     
     public Room getLocation()
     {
@@ -75,6 +67,30 @@ public class Character
     public String getDescription()
     {
         return description;
+    }
+    
+    public String getDialogue()
+    {
+        return dialogue;
+    }
+    
+    public int getHealth()
+    {
+        return health;
+    }
+    
+    public void setHealth(int health)
+    {
+        this.health = health;
+    }
+    
+    /**
+     * Sets the current location for the player
+     * @param location The current location of the player
+     */
+    public void setRoom(Room location)
+    {
+        currentRoom = location;
     }
     
     public String listItems()

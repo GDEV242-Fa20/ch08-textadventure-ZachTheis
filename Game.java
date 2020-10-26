@@ -29,9 +29,8 @@ public class Game
     {
         parser = new Parser();
         player = new Character();
+        nonPCs = new ArrayList<>();
         createGameState();
-        //createCharacters();
-        //createItems();
     }
 
     /**
@@ -130,7 +129,7 @@ public class Game
         
         //Declare all items
         Item sword, shield, knife, beast, potion, rose, wine, stake, amulet, 
-        treasure, feather, key1, key2, key3, ashes;
+        treasure, ring, key1, key2, key3, key4, ashes;
         
         //initialize all items
         sword = new Item("sword", "a gleaming steel sword", 5);
@@ -143,10 +142,11 @@ public class Game
         stake = new Item("stake", "a wooden stake", 5);
         amulet = new Item("amulet", "a magical amulet, set with a gem", 2);
         treasure = new Item("treasure", "the friends you made along the way", 15);
-        feather = new Item("feather", "a magical feather", 4);
+        ring = new Item("ring", "a magical ring with the symbol of a feather", 4);
         key1 = new Item("key", "a single-use key", 1);
         key2 = new Item("key", "a single-use key", 1);
         key3 = new Item("key", "a single-use key", 1);
+        key4 = new Item("key", "a single-use key", 1);
         ashes = new Item("ashes", "the ashy remains of a vampire", 3);
             
         //add items to rooms
@@ -168,7 +168,7 @@ public class Game
         
         tower.addItem(amulet);
         
-        bedchamber.addItem(feather);
+        bedchamber.addItem(key4);
         
         treasury.addItem(treasure);
         
@@ -178,19 +178,40 @@ public class Game
         //initialize all characters
         
         knight = new Character(barracks, "a knight in somewhat less-than-" +
-            "shining armor");
+            "shining armor", "Hello there, hero! How brave of you to... brave" +
+            " these ruins! I am Sir Loin, sent here to recover the kings's lost" +
+            "treasure.\nI'm just so hungry though. Do you think you could find" +
+            "me something to eat?");
         
         skeleton = new Character(dungeon, "an animate - and very talkative - " +
-            "skeleton");
+            "skeleton", "Ooo.. got caught by the old trap door, huh? Shame." +
+            " The cell door is locked, and the lock rused shut.\nI could get" +
+            " you out, but it'll cost you, let's say...\nsome of your vital " +
+            "life energy. What? Guy's gotta eat!\n\nThe skeleton makes an " +
+            "arcane gesture and a swirling violet portal opens in the wall." +
+            "As you approach it, you feel some of your vitality leave you.");
         
-        ogre = new Character(cave, "a smelly, brutish ogre.");
+        ogre = new Character(cave, "a smelly, brutish ogre.", "Me hate you!" +
+            " Me smash you! Me smash you good!");
         
-        wizard = new Character(tower, "a robed, bearded wizard");
+        wizard = new Character(tower, "a robed, bearded wizard", "Greetings," +
+            " adventurer. I am Fistandilthianthis the wise!\nI sense that you " +
+            "seek the lost treasure. It is in the treasury, just north of the " +
+            "throne room, but you will need a magic ring to enter.\nI can give " +
+            "you an amulet that will allow you to see the ring, but only if you" +
+            " slay the ogre that lurks beneath this castle.\nYou should seek " +
+            "out weapons before you face him, as he is quite dangerous.\nGood luck!");
         
-        vampire = new Character(wineCellar, "a very stereotypical vampire");
+        vampire = new Character(wineCellar, "a very stereotypical vampire", "Ah!" +
+        " Good evening. I velcome you to my humble abode. Vhat? Drink your blood?" 
+        + " Vhy vould I vish to do such a thing when I have so much vine?");
         
         priest = new Character(chapel, "a holy man, complete with mitre and" +
-            " rosary");
+            " rosary", "Hello, my child. Welcome to the last sanctuary within" +
+            " this accursed place.\nSadly, I have nothing I can offer you" +
+            " save for a bottle of blessed wine, but it is the last one I " +
+            "have.\nIf the vampire in the wine cellar were to be slain, I would" +
+            "gladly let you have this bottle.");
         
         //add characters to array
         nonPCs.add(knight);
@@ -239,6 +260,7 @@ public class Game
         System.out.println("Type '" + CommandWord.HELP + "' if you need help.");
         System.out.println();
         System.out.println(player.getLocation().getLongDescription());
+        printNPCDescription(player.getLocation());
     }
 
     /**
@@ -284,6 +306,10 @@ public class Game
             case USE:
                 useItem(command, player, player.getLocation());
                 break;
+                
+            case TALK:
+            
+            case TRADE:
 
             case QUIT:
                 wantToQuit = quit(command);
@@ -347,6 +373,7 @@ public class Game
                 System.out.println("You used a key to unlock the door. I wonder" +
                     " why it was a single-use key?");
                 System.out.println(player.getLocation().getLongDescription());
+                printNPCDescription(nextRoom);
             }
             else
             {
@@ -354,7 +381,7 @@ public class Game
             }
         }
         else {
-            if(nextRoom.isTrapped() && !player.listItems().contains("feather"))
+            if(nextRoom.isTrapped() && !player.listItems().contains("ring"))
             {   
                 nextRoom = player.getLocation().getExit("hidden");
                 System.out.println("Oh no! You fell down a trap door!");
@@ -371,6 +398,7 @@ public class Game
     private void lookAround()
     {
         System.out.println(player.getLocation().getLongDescription());
+        printNPCDescription(player.getLocation());
     }
 
     /**
@@ -512,13 +540,22 @@ public class Game
     private void printNPCDescription(Room room)
     {
         String nonPCDescription = "There is ";
+        boolean alone = true;
         for(Character roomNPC : nonPCs)
         {
             if(roomNPC.getLocation() == room)
             {
                 nonPCDescription += roomNPC.getDescription();
+                alone = false;
             }
         }
-        System.out.println(nonPCDescription + " in the room.");
+        if(alone)
+        {
+            System.out.println("You are alone here.");
+        }
+        else
+        {
+            System.out.println(nonPCDescription + " in the room.");
+        }
     }
 }
