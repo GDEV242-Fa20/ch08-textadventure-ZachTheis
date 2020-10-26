@@ -105,6 +105,8 @@ public class Game
         audienceChamber.setExit("west", tower);
         audienceChamber.setExit("down", grandHall);
         
+        chapel.setExit("south", garden);
+        
         throneRoom.setExit("north", treasury);
         throneRoom.setExit("east", bedchamber);
         throneRoom.setExit("south", audienceChamber);
@@ -181,8 +183,8 @@ public class Game
         knight = new Character(barracks, "knight", "a knight in somewhat less-" +
             "than-shining armor", "Hello there, hero! How brave of you to... brave"
             + " these ruins!\nI am Sir Loin, sent here to recover the kings's lost" +
-            "treasure.\nI'm just so hungry though. Do you think you could find" +
-            "me something to eat?");
+            " treasure.\nI'm just so hungry though. Do you think you could find" +
+            " me something to eat?", "");
         
         skeleton = new Character(dungeon, "skeleton", "an animate - and very" + 
             "talkative - skeleton", "Ooo.. got caught by the old trap door, huh?" + 
@@ -202,19 +204,19 @@ public class Game
             "can give you an amulet that will allow you to see the ring, but only" 
             + "if you slay the ogre that lurks beneath this castle.\nYou should" +
             "seek out weapons before you face him, as he is quite dangerous." +
-            "\nGood luck!");
+            "\nGood luck!", "");
         
         vampire = new Character(wineCellar, "vampire", "a very stereotypical " +
             "vampire", "Ah! Good evening. I velcome you to my humble abode.\n" +
             "Vhat? Drink your blood? Vhy vould I vish to do such a thing when " +
             "I have so much vine?");
         
-        priest = new Character(chapel, "priest", "a holy man, complete with " +
+        priest = new Character(chapel, "priest", "a priest, complete with " +
             "mitre and rosary", "Hello, my child. Welcome to the last sanctuary" +
-            "within this accursed place.\nSadly, I have nothing I can offer you" +
-            " save for a bottle of blessed wine, but it is the last one I " +
-            "have.\nIf the vampire in the wine cellar were to be slain, I would" +
-            "gladly let you have this bottle.");
+            " within this accursed place.\nSadly, I have nothing I can offer you" +
+            " save for a bottle of blessed wine, but it is the\nlast one I " +
+            "have.If the vampire in the wine cellar were to be slain,\nI would" +
+            " gladly let you have this bottle.", "");
         
         //add characters to array
         nonPCs.add(knight);
@@ -456,7 +458,7 @@ public class Game
                 System.out.println("You have found the lost treasure!");
                 System.out.println("Surely the bards will sing of your " +
                 "adventure for years to come!\n\nThanks for playing!");
-                
+                quit(new Command(CommandWord.QUIT, null));
             }
             else if(takenItem != null)
             {
@@ -623,22 +625,6 @@ public class Game
         }
         
     }
-
-    /** 
-     * "Quit" was entered. Check the rest of the command to see
-     * whether we really quit the game.
-     * @return true, if this command quits the game, false otherwise.
-     */
-    private boolean quit(Command command) 
-    {
-        if(command.hasSecondWord()) {
-            System.out.println("Quit what?");
-            return false;
-        }
-        else {
-            return true;  // signal that we want to quit
-        }
-    }
     
     /**
      * Prints the details of all NPCs present in the room. If there are none,
@@ -663,6 +649,22 @@ public class Game
         else
         {
             System.out.println(nonPCDescription + " in the room.");
+        }
+    }
+
+    /** 
+     * "Quit" was entered. Check the rest of the command to see
+     * whether we really quit the game.
+     * @return true, if this command quits the game, false otherwise.
+     */
+    private boolean quit(Command command) 
+    {
+        if(command.hasSecondWord()) {
+            System.out.println("Quit what?");
+            return false;
+        }
+        else {
+            return true;  // signal that we want to quit
         }
     }
 }
