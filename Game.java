@@ -45,13 +45,8 @@ public class Game
         treasury, bedchamber, tower, dungeon;
         
         //Declare all items
-<<<<<<< HEAD
-        Item sword, shield, knife, steak, potion, rose, wine, cross, amulet, 
-        treasure, feather, key;
-=======
         Item sword, shield, knife, beast, potion, rose, wine, cross, amulet, 
-        treasure, feather;
->>>>>>> Item-use
+        treasure, feather, key;
                     
         // create each room, adding exits to each
         outside = new Room("outside", "outside the castle gate");

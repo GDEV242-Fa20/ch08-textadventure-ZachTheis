@@ -81,6 +81,14 @@ public class Item
                         System.out.println("You can't use that here!");
                     }
                     break;
+                case "key":
+                    System.out.println("Just walk up to a locked door. "+ 
+                        "The key will do the rest!");
+                    break;
+                case "feather":
+                    System.out.println("You don't need to use that. As long " +
+                        "as you have it, trapdoors have no power over you!");
+                    break;
                 default:
                     System.out.println("You don't have that!");
                     break;
