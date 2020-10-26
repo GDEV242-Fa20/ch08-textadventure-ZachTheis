@@ -141,9 +141,9 @@ public class Item
                     }
                     else if(target != null && hasShield)
                     {
-                        Item ogreHead = new Item("ogre head", 
+                        Item head = new Item("head", 
                             "the head of the slain ogre", 5);
-                        currentRoom.addItem(ogreHead);
+                        currentRoom.addItem(head);
                         System.out.println("You swing your sword at the ogre..."
                             + "\n...and block his club with your shield!\n" +
                             "The ogre's head and body fall to the ground," +

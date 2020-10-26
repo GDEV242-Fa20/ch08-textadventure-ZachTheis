@@ -225,10 +225,10 @@ public class Game
         nonPCs.add(priest);
         
         //add items to NPC inventories//
-        knight.takeItem(sword);
-        knight.takeItem(shield);
-        wizard.takeItem(amulet);
-        priest.takeItem(wine);
+        knight.setTrade("steak", sword);
+        knight.setTrade("wine", shield);
+        wizard.setTrade("head", amulet);
+        priest.setTrade("ashes", wine);
 
         player.setRoom(outside);  // start game outside
     }
@@ -314,7 +314,9 @@ public class Game
                 break;
             
             case TRADE:
-
+                tradeItem(command);
+                break;
+                
             case QUIT:
                 wantToQuit = quit(command);
                 break;
@@ -555,6 +557,48 @@ public class Game
             }
         }
         System.out.println(talkString);
+    }
+    
+    public void tradeItem(Command command)
+    {
+        String itemName = command.getSecondWord();
+        Item tradeItem = null;
+        Character tradePartner = null;
+        ArrayList<Item> playerInventory = player.getInventory();
+        for(Character nonPC : nonPCs)
+        {
+            if(nonPC.getTradeList() != null && 
+                nonPC.getTradeList().containsKey(itemName))
+                {
+                    tradePartner = nonPC;
+                }
+        }
+        if(!command.hasSecondWord())
+        {
+            System.out.println("Trade what item?");
+        }
+        else if(tradePartner == null)
+        {
+            System.out.println("No one here want to trade for that.");
+        }
+        else
+        {
+            for(Item item : playerInventory)
+            {
+                if(item.getName().equals(tradeItem))
+                {
+                    tradeItem = item;
+                }
+            }
+            if(tradeItem != null)
+            {
+                System.out.println(tradePartner.getTradeDialogue());
+                player.dropItem(tradeItem);
+                player.takeItem(tradePartner.getTrade(itemName));
+                tradePartner.setDialogue(tradePartner.getTradeDialogue());
+            }
+        }
+        
     }
 
     /** 

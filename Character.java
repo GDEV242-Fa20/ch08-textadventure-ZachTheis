@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 /**
  * Write a description of class Player here.
  *
@@ -14,6 +15,8 @@ public class Character
     private String name;
     private String description;
     private String dialogue;
+    private String tradeDialogue;
+    private HashMap<String, Item> tradeList;
     private int health = 3;
 
     /**
@@ -32,6 +35,18 @@ public class Character
         this.name = name;
         this.description = description;
         this.dialogue = dialogue;
+    }
+    
+    public Character(Room location, String name, String description, 
+        String dialogue, String tradeDialogue)
+    {
+        inventory = new ArrayList();
+        tradeList = new HashMap();
+        currentRoom = location;
+        this.name = name;
+        this.description = description;
+        this.dialogue = dialogue;
+        this.tradeDialogue = tradeDialogue;
     }
     
     public Room getLocation()
@@ -74,6 +89,21 @@ public class Character
         return dialogue;
     }
     
+    public String getTradeDialogue()
+    {
+        return tradeDialogue;
+    }
+    
+    public HashMap getTradeList()
+    {
+        return tradeList;
+    }
+    
+    public Item getTrade(String price)
+    {
+        return tradeList.get(price);
+    }
+    
     public int getHealth()
     {
         return health;
@@ -96,6 +126,16 @@ public class Character
     public void setRoom(Room location)
     {
         currentRoom = location;
+    }
+    
+    public void setTrade(String toGet, Item toGive)
+    {
+        tradeList.put(toGet,toGive);
+    }
+    
+    public void setDialogue(String newDialogue)
+    {
+        dialogue = newDialogue;
     }
     
     public String listItems()
