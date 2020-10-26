@@ -42,7 +42,8 @@ public class Game
         //Declare all rooms
         Room outside, courtyard, trainingYard, gateHouse, barracks, grandHall, 
         garden, chapel, diningHall, kitchen, parlor, audienceChamber, throneRoom, 
-        treasury, bedchamber, tower, dungeon, cellar, wineCellar, larder, cave;
+        treasury, bedchamber, tower, dungeon, cellar, wineCellar, larder, cave,
+        graveyard;
                     
         // initialize each room, adding exits to each
         outside = new Room("outside", "outside the castle gate");
@@ -66,6 +67,7 @@ public class Game
         wineCellar = new Room("wine cellar", "in the wine cellar");
         larder = new Room("larder", "in the larder");
         cave = new Room("cave", "in a dank cave");
+        graveyard = new Room("graveyard", "where I send dead NPCs"); 
         
         // set room exits
         outside.setExit("north", courtyard);
@@ -120,16 +122,18 @@ public class Game
         
         wineCellar.setExit("north", larder);
         wineCellar.setExit("west", cellar);
+        wineCellar.setExit("dead", graveyard);
         
         larder.setExit("south", wineCellar);
         
         cave.setExit("east", cellar);
+        cave.setExit("dead", graveyard);
         
         dungeon.setExit("hidden", outside);
         
         //Declare all items
         Item sword, shield, knife, beast, potion, rose, wine, stake, amulet, 
-        treasure, ring, key1, key2, key3, key4, ashes;
+        treasure, key1, key2, key3, key4;
         
         //initialize all items
         sword = new Item("sword", "a gleaming steel sword", 5);
@@ -142,12 +146,10 @@ public class Game
         stake = new Item("stake", "a wooden stake", 5);
         amulet = new Item("amulet", "a magical amulet, set with a gem", 2);
         treasure = new Item("treasure", "the friends you made along the way", 0);
-        ring = new Item("ring", "a magical ring with the symbol of a feather", 4);
         key1 = new Item("key", "a single-use key", 1);
         key2 = new Item("key", "a single-use key", 1);
         key3 = new Item("key", "a single-use key", 1);
         key4 = new Item("key", "a single-use key", 1);
-        ashes = new Item("ashes", "the ashy remains of a vampire", 3);
             
         //add items to rooms
         barracks.addItem(key2);
@@ -227,7 +229,6 @@ public class Game
         knight.takeItem(shield);
         wizard.takeItem(amulet);
         priest.takeItem(wine);
-        vampire.takeItem(ashes);
 
         player.setRoom(outside);  // start game outside
     }
@@ -305,7 +306,7 @@ public class Game
                 break;
                 
             case USE:
-                useItem(command, player, player.getLocation());
+                useItem(command, player, player.getLocation(), nonPCs);
                 break;
                 
             case TALK:
@@ -445,7 +446,15 @@ public class Game
                     }
                 }
             }
-            if(takenItem != null)
+            if(takenItem.getName().equals("treasure"))
+            {  
+                System.out.println("You have done it!");
+                System.out.println("You have found the lost treasure!");
+                System.out.println("Surely the bards will sing of your " +
+                "adventure for years to come!\n\nThanks for playing!");
+                
+            }
+            else if(takenItem != null)
             {
                 roomInventory.remove(takenItem);
             }
@@ -491,7 +500,8 @@ public class Game
         }
     }
     
-    private void useItem(Command command, Character player, Room currentRoom)
+    private void useItem(Command command, Character player, Room currentRoom, 
+        ArrayList<Character> nonPlayerCharacters)
     {
         String itemName = command.getSecondWord();
         ArrayList<Item> playerInventory = player.getInventory();
@@ -511,7 +521,7 @@ public class Game
             }
             if(useItem != null)
             {
-                useItem.use(itemName, player, player.getLocation());
+                useItem.use(itemName, player, player.getLocation(), nonPCs);
             }
             else
             {

@@ -50,11 +50,13 @@ public class Item
         return itemWeight;
     }
     
-    public void use(String item, Character player, Room currentRoom)
+    public void use(String item, Character player, Room currentRoom, 
+    ArrayList<Character> roomNPCs)
     {
         ArrayList<Item> playerInventory = player.getInventory();
         Item useItem = null;
-        
+        Character target = null;
+        int index = 0;
         for(Item searchItem : playerInventory)
         {
             if(searchItem.getName().equals(item))
@@ -71,8 +73,8 @@ public class Item
                     {
                         Item steak = new Item("steak", "a think, juicy steak",
                             2);
-                        System.out.println("You slice a thick cut of meat off of the" +
-                            " beast. The knife is now too dull to use.");
+                        System.out.println("You slice a thick cut of meat off" +
+                            "of the beast.\nThe knife is now too dull to use.");
                             player.takeItem(steak);
                             player.dropItem(useItem);
                     }
@@ -85,9 +87,99 @@ public class Item
                     System.out.println("Just walk up to a locked door. "+ 
                         "The key will do the rest!");
                     break;
-                case "feather":
+                case "ring":
                     System.out.println("You don't need to use that. As long " +
                         "as you have it, trapdoors have no power over you!");
+                    break;
+                case "stake":
+                    while(target == null || index < roomNPCs.size())
+                    {
+                        if(roomNPCs.get(index).getName().equals("vampire"))
+                        {
+                            target = roomNPCs.get(index);
+                        }
+                        index++;
+                    }
+                    if(target != null)
+                    {
+                        Item ashes = new Item("ashes", 
+                            "the ashy remains of a vampire", 3);
+                        currentRoom.addItem(ashes);
+                        System.out.println("You stake the vampire in the heart."
+                            + "\nHe turns into a pile of ash on the ground.");
+                        player.dropItem(useItem);
+                    }
+                    else
+                    {
+                        System.out.println("You can't use that here.");
+                    }
+                    break;
+                case "sword":
+                    boolean hasShield = false;
+                    while(!hasShield || index < playerInventory.size())
+                    {
+                        if(playerInventory.get(index).getName().equals("shield"))
+                        {
+                            hasShield = true;
+                        }
+                        index++;
+                    }
+                    while(target == null || index < roomNPCs.size())
+                    {
+                        if(roomNPCs.get(index).getName().equals("ogre"))
+                        {
+                            target = roomNPCs.get(index);
+                        }
+                        index++;
+                    }
+                    if(target != null && !hasShield)
+                    {
+                        System.out.println("You swing your sword at the ogre..."
+                        + "\n...but it overpowers you with it's massive club!"
+                        + "\nYou limp away, defeated.");
+                        player.harm();
+                    }
+                    else if(target != null && hasShield)
+                    {
+                        Item ogreHead = new Item("ogre head", 
+                            "the head of the slain ogre", 5);
+                        currentRoom.addItem(ogreHead);
+                        System.out.println("You swing your sword at the ogre..."
+                            + "\n...and block his club with your shield!\n" +
+                            "The ogre's head and body fall to the ground," +
+                            " separately.");
+                    }
+                    else
+                    {
+                        System.out.println("You can't use that here.");
+                    }
+                    break;
+                case "potion":
+                    System.out.println("You feel vitality return to your body.");
+                    player.heal();
+                    player.dropItem(useItem);
+                    break;
+                case "rose":
+                    System.out.println("What a sweet smelling rose!");
+                    break;
+                case "shield":
+                    System.out.println("You can now safely face the ogre.");
+                    break;
+                case "amulet":
+                    if(currentRoom.getName().equals("parlor"))
+                    {
+                        Item ring = new Item("ring", 
+                            "a magical ring with the symbol of a feather", 4);
+                        System.out.println("The amulet emits a bring light, " +
+                        "revealing a golden ring on the table!\nHaving served" +
+                        " its purpose, the amulet shatters.");
+                        player.dropItem(useItem);
+                        currentRoom.addItem(ring);
+                    }
+                    else
+                    {
+                        System.out.println("You can't use that here.");
+                    }
                     break;
                 default:
                     System.out.println("You don't have that!");

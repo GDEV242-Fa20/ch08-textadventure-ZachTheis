@@ -79,9 +79,14 @@ public class Character
         return health;
     }
     
-    public void setHealth(int health)
+    public void heal()
     {
-        this.health = health;
+        health++;
+    }
+    
+    public void harm()
+    {
+        health--;
     }
     
     /**
