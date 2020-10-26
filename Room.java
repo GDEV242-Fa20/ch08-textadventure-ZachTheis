@@ -6,15 +6,16 @@ import java.util.Iterator;
 /**
  * Class Room - a room in an adventure game.
  *
- * This class is part of the "World of Zuul" application. 
- * "World of Zuul" is a very simple, text based adventure game.  
+ * This class is part of the "Ruins of Adventure" application. 
+ * "Ruins of Adventure" is a fairly simple, text based adventure game.  
  *
  * A "Room" represents one location in the scenery of the game.  It is 
  * connected to other rooms via exits.  For each existing exit, the room 
- * stores a reference to the neighboring room.
+ * stores a reference to the neighboring room. Rooms also store an inventory of 
+ * items.
  * 
  * @author  Zach Theis
- * @version 2020.10.25
+ * @version 2020.10.26
  */
 
 public class Room 

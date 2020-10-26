@@ -1,18 +1,17 @@
 import java.util.ArrayList;
 /**
- *  Disclaimer: I haven't done much in the way of documentation, yet. 
- *  I've been trying to make functional code, knowing it will need refactoring
- *  before attempting to do so.
+ *  "Ruins of Adventure" is a fairly simple text-based adventure game. You have
+ *  journeyed to a ruined castle to find treasure and glory.
  * 
  *  To play this game, create an instance of this class and call the "play"
- *  method.
+ *  method or call the main method.
  * 
  *  This main class creates and initialises all the others: it creates all
  *  rooms, creates the parser and starts the game.  It also evaluates and
  *  executes the commands that the parser returns.
  * 
  * @author  Zach Theis
- * @version 2020.10.25
+ * @version 2020.10.26
  */
 
 public class Game 
@@ -20,9 +19,18 @@ public class Game
     private Parser parser;
     private Character player;
     private ArrayList<Character> nonPCs;
+    
+    /**
+     * The main method, which will allow the program to run outside of BlueJ.
+     */
+    public static void main(String[] args)
+    {
+        Game game = new Game();
+        game.play();
+    }
         
     /**
-     * Create the game and initialise its internal map.
+     * Create the game, initialise its internal map, items, and NPCs.
      */
     public Game() 
     {
@@ -33,9 +41,10 @@ public class Game
     }
 
     /**
-     * Creates the base game state
-     * Create all the rooms and link their exits together. Also create Items and 
-     * Characters and add them to the appropriate rooms.
+     * Creates the initial game state
+     * Creates all the rooms and link their exits together. Creates all Items and 
+     * adds them to the appropriate rooms. Creates all characters, setting their
+     * dialogue options, trade options, and locations. Starts the player outside.
      */
     private void createGameState()
     {
@@ -46,8 +55,8 @@ public class Game
         graveyard;
                     
         // initialize each room, adding exits to each
-        outside = new Room("outside", "outside the castle gate");
-        courtyard = new Room("courtyard", "in the courtyard");
+        outside = new Room("outside", "outside the ruined castle gate");
+        courtyard = new Room("courtyard", "standing in the courtyard.");
         trainingYard = new Room("training yard", "in the training yard");
         gateHouse = new Room("gate house", "in the gate house");
         barracks = new Room(true, "barracks", "in the barracks");
@@ -142,7 +151,8 @@ public class Game
         shield = new Item("shield", "a sturdy steel shield", 6);
         knife = new Item("knife", "a sharp, heavy kitchen knife", 1);
         beast = new Item("beast", "a gigantic roast beast of some kind", 100);
-        potion = new Item("potion", "a glowing red potion", 2);
+        potion = new Item("potion", "a glowing red potion with a heart on the" +
+            " bottle", 2);
         rose = new Item("rose", "a beautiful red rose", 1);
         wine = new Item("wine", "a bottle of dark wine", 3);
         stake = new Item("stake", "a wooden stake", 5);
@@ -182,7 +192,7 @@ public class Game
         
         knight = new Character(barracks, "knight", "a knight in somewhat less-" +
             "than-shining armor", "Hello there, hero! How brave of you to... brave"
-            + " these ruins!\nI am Sir Loin, sent here to recover the kings's lost" +
+            + " these ruins!\nI am Sir Loin, sent here to recover Zaldron's lost" +
             " treasure.\nI'm just so hungry though. Do you think you could find" +
             " me something to eat?\nOh, and something to wash it down with!", 
             "You know, the greatest pleasure in life is a juicy steak paired with" +
@@ -200,14 +210,14 @@ public class Game
             + " Me smash you! Me smash you good!");
         
         wizard = new Character(tower, "wizard", "a robed, bearded wizard",
-            "Greetings, adventurer. I am Fistandilthianthis the wise!\nI sense" + 
+            "Greetings, adventurer. I am Fistandilthianthis the wise!\nI sense " + 
             "that you seek the lost treasure.\nIt is in the treasury, just north" +
-            "of the throne room, but\nyou will need a magic ring to enter.\nI" + 
+            " of the throne room, but\nyou will need a magic ring to enter.\n I" + 
             "can give you an amulet that will allow you to see the ring,\nbut only" 
-            + "if you slay the ogre that lurks beneath this castle.\nYou should" +
-            "seek out weapons before you face him, as he is quite dangerous." +
+            + " if you slay the ogre that lurks beneath this castle.\nYou should" +
+            " seek out weapons before you face him, as he is quite dangerous." +
             "\nGood luck!", "Excellent! That brute was keeping me awake" +
-            " by playing ska all night!/nNow I can study my magic in peace!" +
+            " by playing ska all night!\nNow I can study my magic in peace!" +
             "\nHere, use this amulet to reveal that which is hidden from sight.");
         
         vampire = new Character(wineCellar, "vampire", "a very stereotypical " +
@@ -218,7 +228,7 @@ public class Game
         priest = new Character(chapel, "priest", "a priest, complete with " +
             "mitre and rosary", "Hello, my child. Welcome to the last sanctuary" +
             " within this accursed place.\nSadly, I have nothing I can offer you" +
-            " save for a bottle of blessed wine, but it is the\nlast one I " +
+            " save for a bottle of blessed wine,\nbut it is the last one I " +
             "have. If the vampire in the wine cellar were to be slain,\nI would" +
             " gladly let you have this bottle.", "You've done it! You've slain" +
             " the vampire who's been stealing my wine!\nBless you, my child! " +
@@ -263,12 +273,14 @@ public class Game
         {
             System.out.println("You have done it!");
             System.out.println("You have found the lost treasure!");
-            System.out.println("Surely the bards will sing of your adventure for years to come!");
+            System.out.println("Surely the bards will sing of your adventure for" +
+                "years to come!");
         }
         else if(player.getHealth() <=0)
         {
             System.out.println("You feel the life leave your body as you fall to" +
-                " the floor.\nIt seems you were not meant for a life of adventure.");
+                " the floor.\nIt seems you were not meant for a life of adventure."
+                + "\nOh, well. Time to go do the dishes.");
         }
         System.out.println("Thank you for playing.  Good bye.");
     }
@@ -279,8 +291,12 @@ public class Game
     private void printWelcome()
     {
         System.out.println();
-        System.out.println("Welcome to the World of Zuul!");
-        System.out.println("World of Zuul is a new, incredibly boring adventure game.");
+        System.out.println("Welcome to Ruins of Adventure!");
+        System.out.println("Deep within the ruins, it is said that the lost treasure"
+            + "of\nKing Zaldron remains unclaimed.");
+        System.out.println("You have come to seek fortune and glory...");
+        System.out.println("...and to get out of doing the dishes.");
+        System.out.println("Now... on to Adventure!");
         System.out.println("Type '" + CommandWord.HELP + "' if you need help.");
         System.out.println();
         lookAround();

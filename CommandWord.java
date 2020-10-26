@@ -3,7 +3,7 @@
  * along with a string in a particular language.
  * 
  * @author  Zach Theis
- * @version 2020.10.25
+ * @version 2020.10.26
  */
 public enum CommandWord
 {

@@ -1,9 +1,16 @@
 import java.util.ArrayList;
 /**
- * Write a description of class Item here.
+ * Class Item - an item in an adventure game.
+ * 
+ * This class is part of the "Ruins of Adventure" application. 
+ * "Ruins of Adventure" is a fairly simple, text based adventure game.
+ * 
+ * Items each store their name, description, and weight. This class is also 
+ * responsible for the effects each item as, as detailed by the switch case in the
+ * use method.
  *
  * @author Zach Theis
- * @version 2020.10.25
+ * @version 2020.10.26
  */
 public class Item
 {
@@ -114,7 +121,7 @@ public class Item
                             "the ashy remains of a vampire", 3);
                         currentRoom.addItem(ashes);
                         System.out.println("You stake the vampire in the heart."
-                            + "\nHe turns into a pile of ash on the ground.");
+                            + "\nHe turns into a pile of ashes on the ground.");
                         player.dropItem(useItem);
                         target.setRoom(currentRoom.getExit("dead"));
                     }
