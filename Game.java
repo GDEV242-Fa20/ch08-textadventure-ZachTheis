@@ -246,9 +246,21 @@ public class Game
         // execute them until the game is over.
                 
         boolean finished = false;
-        while (! finished) {
+        boolean foundTreasure = false;
+        while (!finished && !foundTreasure && player.getHealth() > 0) {
             Command command = parser.getCommand();
             finished = processCommand(command);
+            foundTreasure = wonGame();
+        }
+        if(foundTreasure)
+        {
+            System.out.println("You have done it!");
+            System.out.println("You have found the lost treasure!");
+            System.out.println("Surely the bards will sing of your adventure for years to come!");
+        }
+        else if(player.getHealth() <=0)
+        {
+            
         }
         System.out.println("Thank you for playing.  Good bye.");
     }
@@ -454,11 +466,8 @@ public class Game
             }
             if(takenItem.getName().equals("key"))
             {  
-                System.out.println("You have done it!");
-                System.out.println("You have found the lost treasure!");
-                System.out.println("Surely the bards will sing of your " +
-                "adventure for years to come!\n\nThanks for playing!");
-                quit(new Command(CommandWord.QUIT, null));
+                
+                
             }
             else if(takenItem != null)
             {
@@ -666,5 +675,19 @@ public class Game
         else {
             return true;  // signal that we want to quit
         }
+    }
+    
+    private boolean wonGame()
+    {
+        boolean hasTreasure = false;
+        ArrayList<Item> playerInventory = player.getInventory();
+        for(Item item : playerInventory)
+        {
+            if(item.getName().equals("treasure"))
+            {
+                hasTreasure = true;
+            }
+        }
+        return hasTreasure;
     }
 }
