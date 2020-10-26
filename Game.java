@@ -20,6 +20,7 @@ public class Game
 {
     private Parser parser;
     private Character player;
+    private ArrayList<Character> nonPCs;
         
     /**
      * Create the game and initialise its internal map.
@@ -146,6 +147,7 @@ public class Game
         key1 = new Item("key", "a single-use key", 1);
         key2 = new Item("key", "a single-use key", 1);
         key3 = new Item("key", "a single-use key", 1);
+        ashes = new Item("ashes", "the ashy remains of a vampire", 3);
             
         //add items to rooms
         barracks.addItem(sword);
@@ -174,20 +176,36 @@ public class Game
         Character knight, skeleton, ogre, wizard, vampire, priest;
         
         //initialize all characters
+        
         knight = new Character(barracks, "a knight in somewhat less-than-" +
             "shining armor");
+        
         skeleton = new Character(dungeon, "an animate - and very talkative - " +
             "skeleton");
+        
         ogre = new Character(cave, "a smelly, brutish ogre.");
+        
         wizard = new Character(tower, "a robed, bearded wizard");
+        
         vampire = new Character(wineCellar, "a very stereotypical vampire");
+        
         priest = new Character(chapel, "a holy man, complete with mitre and" +
             " rosary");
-            
         
+        //add characters to array
+        nonPCs.add(knight);
+        nonPCs.add(skeleton);
+        nonPCs.add(ogre);
+        nonPCs.add(wizard);
+        nonPCs.add(vampire);
+        nonPCs.add(priest);
         
-        //add character to rooms
-        
+        //add items to NPC inventories//
+        knight.takeItem(sword);
+        knight.takeItem(shield);
+        wizard.takeItem(amulet);
+        priest.takeItem(wine);
+        vampire.takeItem(ashes);
 
         player.setRoom(outside);  // start game outside
     }
@@ -309,6 +327,7 @@ public class Game
         ArrayList<Item> playerInventory = player.getInventory();
         Item playerKey = null;
         int index = 0;
+        String nonPCDescription = null;
         if (nextRoom == null) {
             System.out.println("You can't go that way!");
         }
@@ -342,6 +361,7 @@ public class Game
             }
             player.setRoom(nextRoom);
             System.out.println(player.getLocation().getLongDescription());
+            printNPCDescription(nextRoom);
         }
     }
     
@@ -487,5 +507,18 @@ public class Game
         else {
             return true;  // signal that we want to quit
         }
+    }
+    
+    private void printNPCDescription(Room room)
+    {
+        String nonPCDescription = "There is ";
+        for(Character roomNPC : nonPCs)
+        {
+            if(roomNPC.getLocation() == room)
+            {
+                nonPCDescription += roomNPC.getDescription();
+            }
+        }
+        System.out.println(nonPCDescription + " in the room.");
     }
 }

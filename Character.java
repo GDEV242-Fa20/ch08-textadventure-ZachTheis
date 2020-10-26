@@ -72,6 +72,11 @@ public class Character
         return total;
     }
     
+    public String getDescription()
+    {
+        return description;
+    }
+    
     public String listItems()
     {
         String itemString = "The items in your inventory are:\n";
