@@ -112,7 +112,7 @@ public class Room
         String returnString = "Exits:";
         Set<String> keys = exits.keySet();
         for(String exit : keys) {
-            if(!exit.equals("hidden") || !exit.equals("dead"))
+            if(!exit.equals("hidden") && !exit.equals("dead"))
             {
                 returnString += " " + exit;
             }

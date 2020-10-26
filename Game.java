@@ -110,9 +110,9 @@ public class Game
         throneRoom.setExit("north", treasury);
         throneRoom.setExit("east", bedchamber);
         throneRoom.setExit("south", audienceChamber);
+        throneRoom.setExit("hidden", dungeon);
         
         treasury.setExit("south", throneRoom);
-        treasury.setExit("hidden", dungeon);
         
         bedchamber.setExit("west", throneRoom);
         
@@ -184,14 +184,16 @@ public class Game
             "than-shining armor", "Hello there, hero! How brave of you to... brave"
             + " these ruins!\nI am Sir Loin, sent here to recover the kings's lost" +
             " treasure.\nI'm just so hungry though. Do you think you could find" +
-            " me something to eat?", "");
+            " me something to eat?\nAnd something to wash it down with", 
+            "You know, the greatest pleasure in life is a juicy steak paired with" +
+            " a good wine.");
         
-        skeleton = new Character(dungeon, "skeleton", "an animate - and very" + 
+        skeleton = new Character(dungeon, "skeleton", "an animate - and very " + 
             "talkative - skeleton", "Ooo.. got caught by the old trap door, huh?" + 
-            "Shame. The cell door is locked, and the lock rused shut.\nI could get"
-            + " you out, but it'll cost you, let's say...\nsome of your vital " +
+            " Shame. The cell door is locked, \nand the lock rusted shut.\nI could"
+            + " get you out, but it'll cost you, let's say...\nsome of your vital " +
             "life energy. What? Guy's gotta eat!\n\nThe skeleton makes an " +
-            "arcane gesture and a swirling violet portal opens in the wall." +
+            "arcane gesture and a swirling violet portal opens in the wall.\n" +
             "As you approach it, you feel some of your vitality leave you.");
         
         ogre = new Character(cave, "ogre", "a smelly, brutish ogre.", "Me hate you!"
@@ -199,12 +201,14 @@ public class Game
         
         wizard = new Character(tower, "wizard", "a robed, bearded wizard",
             "Greetings, adventurer. I am Fistandilthianthis the wise!\nI sense" + 
-            "that you seek the lost treasure. It is in the treasury, just north" +
-            "of the throne room, but you will need a magic ring to enter.\nI" + 
-            "can give you an amulet that will allow you to see the ring, but only" 
+            "that you seek the lost treasure.\nIt is in the treasury, just north" +
+            "of the throne room, but\nyou will need a magic ring to enter.\nI" + 
+            "can give you an amulet that will allow you to see the ring,\nbut only" 
             + "if you slay the ogre that lurks beneath this castle.\nYou should" +
             "seek out weapons before you face him, as he is quite dangerous." +
-            "\nGood luck!", "");
+            "\nGood luck!", "Excellent! That brute was keeping me awake" +
+            " by playing ska all night!/nNow I can study my magic in peace!" +
+            "\nHere, use this amulet to reveal that which is hidden from sight.");
         
         vampire = new Character(wineCellar, "vampire", "a very stereotypical " +
             "vampire", "Ah! Good evening. I velcome you to my humble abode.\n" +
@@ -215,8 +219,10 @@ public class Game
             "mitre and rosary", "Hello, my child. Welcome to the last sanctuary" +
             " within this accursed place.\nSadly, I have nothing I can offer you" +
             " save for a bottle of blessed wine, but it is the\nlast one I " +
-            "have.If the vampire in the wine cellar were to be slain,\nI would" +
-            " gladly let you have this bottle.", "");
+            "have. If the vampire in the wine cellar were to be slain,\nI would" +
+            " gladly let you have this bottle.", "You've done it! You've slain" +
+            " the vampire who's been stealing my wine! Bless you, my child! " +
+            "Here, please take this wine in thanks!");
         
         //add characters to array
         nonPCs.add(knight);
@@ -236,7 +242,8 @@ public class Game
     }
 
     /**
-     *  Main play routine.  Loops until end of play.
+     *  Main play routine.  Loops until end of play, which can be triggered by the 
+     *  player quitting, finding the treasure, or losing all of their health.
      */
     public void play() 
     {            
@@ -260,7 +267,8 @@ public class Game
         }
         else if(player.getHealth() <=0)
         {
-            
+            System.out.println("You feel the life leave your body as you fall to" +
+                " the floor.\nIt seems you were not meant for a life of adventure.");
         }
         System.out.println("Thank you for playing.  Good bye.");
     }
@@ -275,8 +283,7 @@ public class Game
         System.out.println("World of Zuul is a new, incredibly boring adventure game.");
         System.out.println("Type '" + CommandWord.HELP + "' if you need help.");
         System.out.println();
-        System.out.println(player.getLocation().getLongDescription());
-        printNPCDescription(player.getLocation());
+        lookAround();
     }
 
     /**
@@ -395,8 +402,7 @@ public class Game
                 nextRoom.setLocked(false);
                 System.out.println("You used a key to unlock the door. I wonder" +
                     " why it was a single-use key?");
-                System.out.println(player.getLocation().getLongDescription());
-                printNPCDescription(nextRoom);
+                lookAround();
             }
             else
             {
@@ -410,8 +416,7 @@ public class Game
                 System.out.println("Oh no! You fell down a trap door!");
             }
             player.setRoom(nextRoom);
-            System.out.println(player.getLocation().getLongDescription());
-            printNPCDescription(nextRoom);
+            lookAround();
         }
     }
     
@@ -464,12 +469,7 @@ public class Game
                     }
                 }
             }
-            if(takenItem.getName().equals("key"))
-            {  
-                
-                
-            }
-            else if(takenItem != null)
+            if(takenItem != null)
             {
                 roomInventory.remove(takenItem);
             }
@@ -569,6 +569,7 @@ public class Game
     {
         String talkString = "They aren't here";
         String talkName = command.getSecondWord();
+        String charName = null;
         if(!command.hasSecondWord())
         {
             talkString = "Talk to who?";
@@ -581,10 +582,19 @@ public class Game
                     roomNPC.getLocation() == player.getLocation())
                 {
                     talkString = roomNPC.getDialogue();
+                    charName = roomNPC.getName();
                 }
             }
         }
         System.out.println(talkString);
+        if(charName.equals("skeleton"))
+        {
+            player.harm();
+            player.setRoom(player.getLocation().getExit("hidden"));
+            System.out.println("You are teleported back outside the castle" +
+            ",\nfeeling just a little weaker than you were before.");
+            lookAround();
+        }
     }
     
     /**
@@ -593,7 +603,7 @@ public class Game
      * the method will create a message saying so.
      * @param command The processed command with the name of the item to be traded.
      */
-    public void tradeItem(Command command)
+    private void tradeItem(Command command)
     {
         String itemName = command.getSecondWord();
         Item tradeItem = null;

@@ -188,6 +188,12 @@ public class Item
                         System.out.println("You can't use that here.");
                     }
                     break;
+                case "ashes":
+                    System.out.println("Use these to prove the vampire is slain.");
+                    break;
+                case "head":
+                    System.out.println("Use this to prove you've killed the ogre.");
+                    break;
                 default:
                     System.out.println("You don't have that!");
                     break;
