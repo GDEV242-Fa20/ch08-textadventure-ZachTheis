@@ -15,7 +15,6 @@ dependency13.from=Game
 dependency13.to=Item
 dependency13.type=UsesDependency
 dependency14.from=Game
-dependency14.to=CommandWord
 dependency14.to=Command
 dependency14.type=UsesDependency
 dependency15.from=Game
