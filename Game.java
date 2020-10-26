@@ -141,7 +141,7 @@ public class Game
         wine = new Item("wine", "a bottle of dark wine", 3);
         stake = new Item("stake", "a wooden stake", 5);
         amulet = new Item("amulet", "a magical amulet, set with a gem", 2);
-        treasure = new Item("treasure", "the friends you made along the way", 15);
+        treasure = new Item("treasure", "the friends you made along the way", 0);
         ring = new Item("ring", "a magical ring with the symbol of a feather", 4);
         key1 = new Item("key", "a single-use key", 1);
         key2 = new Item("key", "a single-use key", 1);
@@ -150,8 +150,6 @@ public class Game
         ashes = new Item("ashes", "the ashy remains of a vampire", 3);
             
         //add items to rooms
-        barracks.addItem(sword);
-        barracks.addItem(shield);
         barracks.addItem(key2);
         
         gateHouse.addItem(key1);
@@ -163,7 +161,6 @@ public class Game
         
         garden.addItem(rose);
         
-        chapel.addItem(wine);
         chapel.addItem(stake);
         
         tower.addItem(amulet);
@@ -172,43 +169,47 @@ public class Game
         
         treasury.addItem(treasure);
         
+        larder.addItem(key3);
+        
         //Declare all characters
         Character knight, skeleton, ogre, wizard, vampire, priest;
         
         //initialize all characters
         
-        knight = new Character(barracks, "a knight in somewhat less-than-" +
-            "shining armor", "Hello there, hero! How brave of you to... brave" +
-            " these ruins! I am Sir Loin, sent here to recover the kings's lost" +
+        knight = new Character(barracks, "knight", "a knight in somewhat less-" +
+            "than-shining armor", "Hello there, hero! How brave of you to... brave"
+            + " these ruins!\nI am Sir Loin, sent here to recover the kings's lost" +
             "treasure.\nI'm just so hungry though. Do you think you could find" +
             "me something to eat?");
         
-        skeleton = new Character(dungeon, "an animate - and very talkative - " +
-            "skeleton", "Ooo.. got caught by the old trap door, huh? Shame." +
-            " The cell door is locked, and the lock rused shut.\nI could get" +
-            " you out, but it'll cost you, let's say...\nsome of your vital " +
+        skeleton = new Character(dungeon, "skeleton", "an animate - and very" + 
+            "talkative - skeleton", "Ooo.. got caught by the old trap door, huh?" + 
+            "Shame. The cell door is locked, and the lock rused shut.\nI could get"
+            + " you out, but it'll cost you, let's say...\nsome of your vital " +
             "life energy. What? Guy's gotta eat!\n\nThe skeleton makes an " +
             "arcane gesture and a swirling violet portal opens in the wall." +
             "As you approach it, you feel some of your vitality leave you.");
         
-        ogre = new Character(cave, "a smelly, brutish ogre.", "Me hate you!" +
-            " Me smash you! Me smash you good!");
+        ogre = new Character(cave, "ogre", "a smelly, brutish ogre.", "Me hate you!"
+            + " Me smash you! Me smash you good!");
         
-        wizard = new Character(tower, "a robed, bearded wizard", "Greetings," +
-            " adventurer. I am Fistandilthianthis the wise!\nI sense that you " +
-            "seek the lost treasure. It is in the treasury, just north of the " +
-            "throne room, but you will need a magic ring to enter.\nI can give " +
-            "you an amulet that will allow you to see the ring, but only if you" +
-            " slay the ogre that lurks beneath this castle.\nYou should seek " +
-            "out weapons before you face him, as he is quite dangerous.\nGood luck!");
+        wizard = new Character(tower, "wizard", "a robed, bearded wizard",
+            "Greetings, adventurer. I am Fistandilthianthis the wise!\nI sense" + 
+            "that you seek the lost treasure. It is in the treasury, just north" +
+            "of the throne room, but you will need a magic ring to enter.\nI" + 
+            "can give you an amulet that will allow you to see the ring, but only" 
+            + "if you slay the ogre that lurks beneath this castle.\nYou should" +
+            "seek out weapons before you face him, as he is quite dangerous." +
+            "\nGood luck!");
         
-        vampire = new Character(wineCellar, "a very stereotypical vampire", "Ah!" +
-        " Good evening. I velcome you to my humble abode. Vhat? Drink your blood?" 
-        + " Vhy vould I vish to do such a thing when I have so much vine?");
+        vampire = new Character(wineCellar, "vampire", "a very stereotypical " +
+            "vampire", "Ah! Good evening. I velcome you to my humble abode.\n" +
+            "Vhat? Drink your blood? Vhy vould I vish to do such a thing when " +
+            "I have so much vine?");
         
-        priest = new Character(chapel, "a holy man, complete with mitre and" +
-            " rosary", "Hello, my child. Welcome to the last sanctuary within" +
-            " this accursed place.\nSadly, I have nothing I can offer you" +
+        priest = new Character(chapel, "priest", "a holy man, complete with " +
+            "mitre and rosary", "Hello, my child. Welcome to the last sanctuary" +
+            "within this accursed place.\nSadly, I have nothing I can offer you" +
             " save for a bottle of blessed wine, but it is the last one I " +
             "have.\nIf the vampire in the wine cellar were to be slain, I would" +
             "gladly let you have this bottle.");
@@ -308,6 +309,8 @@ public class Game
                 break;
                 
             case TALK:
+                talkTo(command);
+                break;
             
             case TRADE:
 
@@ -370,6 +373,7 @@ public class Game
             {
                 player.dropItem(playerKey);
                 player.setRoom(nextRoom);
+                nextRoom.setLocked(false);
                 System.out.println("You used a key to unlock the door. I wonder" +
                     " why it was a single-use key?");
                 System.out.println(player.getLocation().getLongDescription());
@@ -519,6 +523,28 @@ public class Game
     private void getInventory()
     {
         System.out.println(player.listItems());
+    }
+    
+    private void talkTo(Command command)
+    {
+        String talkString = "They aren't here";
+        String talkName = command.getSecondWord();
+        if(!command.hasSecondWord())
+        {
+            talkString = "Talk to who?";
+        }
+        else
+        {
+            for(Character roomNPC : nonPCs)
+            {
+                if(roomNPC.getName().equals(talkName) && 
+                    roomNPC.getLocation() == player.getLocation())
+                {
+                    talkString = roomNPC.getDialogue();
+                }
+            }
+        }
+        System.out.println(talkString);
     }
 
     /** 

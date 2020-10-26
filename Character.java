@@ -11,6 +11,7 @@ public class Character
     private ArrayList<Item> inventory;
     private Room currentRoom;
     private int weightLimit = 15;
+    private String name;
     private String description;
     private String dialogue;
     private int health = 3;
@@ -24,19 +25,13 @@ public class Character
         inventory = new ArrayList<>();
     }
     
-    public Character(Room location, String description, String dialogue)
+    public Character(Room location, String name, String description, String dialogue)
     {
         inventory = new ArrayList();
         currentRoom = location;
+        this.name = name;
         this.description = description;
         this.dialogue = dialogue;
-    }
-    
-    public Character(Room location, Item item)
-    {
-        inventory = new ArrayList();
-        currentRoom = location;
-        inventory.add(item);
     }
     
     public Room getLocation()
@@ -52,6 +47,11 @@ public class Character
     public int getWeightLimit()
     {   
         return weightLimit;
+    }
+    
+    public String getName()
+    {
+        return name;
     }
     
     public int getWeightCarried()

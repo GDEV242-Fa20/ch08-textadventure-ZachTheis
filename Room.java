@@ -70,6 +70,11 @@ public class Room
         exits.put(direction, neighbor);
     }
     
+    public void setLocked(boolean isLocked)
+    {
+        locked = isLocked;
+    }
+    
     public String getName()
     {
         return name;
